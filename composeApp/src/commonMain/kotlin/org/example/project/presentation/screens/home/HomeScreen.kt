@@ -58,6 +58,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.icons.filled.Colorize
+import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.Landslide
+import androidx.compose.material.icons.filled.QuestionMark
+import androidx.compose.material.icons.outlined.Alarm
 import androidx.lifecycle.viewModelScope
 import org.example.project.presentation.shared.SharedEvaluationViewModel
 import org.koin.compose.koinInject
@@ -169,12 +175,12 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                         )
                         MenuButton(
                             text = "Quando amostrar",
-                            icon = Icons.Outlined.Eco,
+                            icon = Icons.Outlined.Alarm,
                             onClick = { navController.navigate(NavigationRoutes.WhenToSample) }
                         )
                         MenuButton(
                             text = "Fragmentação da amostra",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.Extension,
                             onClick = { navController.navigate(NavigationRoutes.SampleFragmentation) }
                         )
                     }
@@ -193,12 +199,12 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                         )
                         MenuButton(
                             text = "Extração da amostra",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.Landslide,
                             onClick = { navController.navigate(NavigationRoutes.SampleExtraction) }
                         )
                         MenuButton(
                             text = "Atribuição dos escores VESS",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.Colorize,
                             onClick = { navController.navigate(NavigationRoutes.VessScores) }
                         )
                     }
@@ -220,12 +226,12 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                     ) {
                         MenuButton(
                             text = "Decisão de manejo",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.EditCalendar,
                             onClick = { navController.navigate(NavigationRoutes.ManagementDecision) }
                         )
                         MenuButton(
                             text = "O que é o VESS",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.QuestionMark,
                             onClick = { navController.navigate(NavigationRoutes.WhatIsVESS) }
                         )
                         MenuButton(
@@ -244,7 +250,7 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                     ) {
                         MenuButton(
                             text = "Informações complementares",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.AddCircle,
                             onClick = { navController.navigate(NavigationRoutes.ComplementaryInfo) }
                         )
                         MenuButton(
