@@ -192,10 +192,10 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                 // Botão "SALVAR"
                 Button(
                     onClick = {
-                        // Lógica para salvar a avaliação completa e navegar para o histórico
-                        println("SALVAR clicado!")
-                        // TODO: Implementar a lógica de salvar os dados no repositório
-                        navController.navigate(NavigationRoutes.MyEvaluations) // Navega para o histórico
+                        viewModel.saveFinalEvaluation()
+                        navController.navigate(NavigationRoutes.MyEvaluations) {
+                            popUpTo(NavigationRoutes.Home)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)

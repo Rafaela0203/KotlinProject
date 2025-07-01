@@ -9,26 +9,35 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.example.project.presentation.shared.SharedEvaluationViewModel
+import kotlin.time.Clock
+import kotlin.time.Clock.System
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class EvaluateViewModel(
     private val sharedViewModel: SharedEvaluationViewModel
 ) : ViewModel() {
 
-    // 1. Defina o estado da avaliação usando um StateFlow
     private val _uiState = MutableStateFlow(
+        // O valor inicial será sobrescrito imediatamente no bloco init
         EvaluationData(
-            // Defina o nome da amostra com base no contador, que será atualizado no init
             sampleName = "Amostra Nº ${sharedViewModel.currentSampleIndex.value}",
             location = "",
             evaluator = "",
             layers = listOf(LayerData(length = "", score = "")),
-            otherImportantInfo = ""
+            otherImportantInfo = "",
+            sessionId = sharedViewModel.currentSessionId ?: 0L // Pega o ID da sessão aqui
         )
     )
     val uiState: StateFlow<EvaluationData> = _uiState.asStateFlow()
 
     init {
-        // Colete o valor do contador de amostras e atualize o nome da amostra sempre que ele mudar
+        // Atualiza o sessionId no estado assim que o ViewModel é criado
+        _uiState.value = _uiState.value.copy(
+            sessionId = sharedViewModel.currentSessionId ?: System.now().toEpochMilliseconds()
+        )
+
+        // Colete o valor do contador de amostras para atualizar o nome
         viewModelScope.launch {
             sharedViewModel.currentSampleIndex.collect { index ->
                 _uiState.value = _uiState.value.copy(sampleName = "Amostra Nº $index")

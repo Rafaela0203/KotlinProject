@@ -1,6 +1,8 @@
 // KotlinProject/composeApp/src/commonMain/kotlin/org/example/project/di/AppModules.kt
 package org.example.project.di
 
+import AppDatabase
+import androidx.room.Room
 import org.example.project.data.repository.ConfigurationRepository
 import org.example.project.presentation.screens.aboutApp.AboutAppViewModel
 import org.example.project.presentation.screens.complementaryInfo.ComplementaryInfoViewModel
@@ -65,7 +67,7 @@ val viewModelModule = module {
         EvaluateViewModel(get())
     }
     viewModel {
-        FinalEvaluationSummaryViewModel(get())
+        FinalEvaluationSummaryViewModel(get(), get())
     }
     viewModel {
         EvaluationResultViewModel()

@@ -117,7 +117,7 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                     onClick = {
                         viewModel.viewModelScope.launch {
                             viewModel.checkConfigurationAndNavigate {
-                                sharedViewModel.resetSampleIndex()
+                                sharedViewModel.startNewEvaluationSession()
                                 navController.navigate(NavigationRoutes.Evaluate)
                             }
                         }

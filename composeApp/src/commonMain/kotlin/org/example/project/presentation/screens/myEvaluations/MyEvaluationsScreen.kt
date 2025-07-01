@@ -62,7 +62,7 @@ fun MyEvaluationsContent(navController: NavController, viewModel: MyEvaluationsV
                 )
             )
         },
-        content = { paddingValues ->
+        content =  { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -70,7 +70,9 @@ fun MyEvaluationsContent(navController: NavController, viewModel: MyEvaluationsV
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (uiState.evaluations.isEmpty()) {
+                if (uiState.isLoading) {
+                    CircularProgressIndicator() // Mostra um loading
+                } else if (uiState.evaluationGroups.isEmpty()) {
                     Text(
                         text = "Nenhuma avaliação encontrada. Realize uma avaliação primeiro!",
                         style = MaterialTheme.typography.bodyLarge,
@@ -79,14 +81,11 @@ fun MyEvaluationsContent(navController: NavController, viewModel: MyEvaluationsV
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(uiState.evaluations) { evaluation ->
-                            EvaluationItem(evaluation) {
-                                // TODO: A ser implementado. Navegação para uma tela de detalhes
-                                // ou exibição de um diálogo com os detalhes da avaliação
-                                println("Clicado na avaliação: ${evaluation.sampleName}")
-                            }
+                        // Itera sobre os grupos de avaliação
+                        items(uiState.evaluationGroups) { group ->
+                            EvaluationGroupItem(group = group)
                         }
                     }
                 }
@@ -94,6 +93,37 @@ fun MyEvaluationsContent(navController: NavController, viewModel: MyEvaluationsV
         }
     )
 }
+
+@Composable
+fun EvaluationGroupItem(group: EvaluationGroup) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Avaliação de ${group.sessionDate}",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = LightColorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Coluna interna para as amostras (não rolável, pois o LazyColumn já rola)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                group.samples.forEach { evaluation ->
+                    // Reutiliza o item de avaliação que você já tinha
+                    EvaluationItem(evaluation) {
+                        println("Clicado na amostra: ${evaluation.sampleName}")
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun EvaluationItem(evaluation: EvaluationData, onClick: () -> Unit) {

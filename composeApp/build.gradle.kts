@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.koin.core)
