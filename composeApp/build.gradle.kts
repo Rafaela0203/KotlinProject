@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -55,6 +57,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation (libs.kotlinx.serialization.json)
             implementation(libs.androidx.datastore.preferences.core)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         commonTest.dependencies {
             implementation(libs.koin.core)
@@ -90,7 +94,12 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
+    ksp(libs.room.compiler)
     debugImplementation(compose.uiTooling)
 }
 
