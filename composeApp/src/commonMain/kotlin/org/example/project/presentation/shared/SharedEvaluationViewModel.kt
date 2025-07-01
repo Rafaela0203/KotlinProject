@@ -8,16 +8,23 @@ import EvaluationData
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class SharedEvaluationViewModel : ViewModel() {
 
     private val _evaluations = mutableListOf<EvaluationData>()
     val evaluations: List<EvaluationData> get() = _evaluations
     var currentSessionId: Long? = null
 
-    @OptIn(ExperimentalTime::class)
+    var sessionEndTime: Long? = null
+
     fun startNewEvaluationSession() {
         currentSessionId = Clock.System.now().toEpochMilliseconds()
+        sessionEndTime = null // Reseta o tempo final
         resetSampleIndex()
+    }
+
+    fun endEvaluationSession() {
+        sessionEndTime = Clock.System.now().toEpochMilliseconds()
     }
 
     var currentEvaluation: EvaluationData? = null

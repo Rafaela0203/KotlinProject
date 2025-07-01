@@ -1,6 +1,5 @@
 package org.example.project.presentation.screens.evaluate
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,24 +52,59 @@ import org.example.project.NavigationRoutes
 import org.example.project.utils.encodeUrl
 import org.koin.compose.viewmodel.koinViewModel
 import LayerData
+import androidx.compose.material.icons.filled.GpsFixed
+import androidx.compose.ui.text.intl.Locale
+import coil3.compose.AsyncImage
+import org.example.project.location.GpsLocation
+import org.example.project.location.rememberLocationManager
 import org.example.project.presentation.shared.SharedEvaluationViewModel
+import org.example.project.utils.ImagePicker
 import org.koin.compose.koinInject
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 @Composable
 fun EvaluateScreen (
     navController: NavController,
     viewModel: EvaluateViewModel = koinViewModel()
 ){
-    EvaluateContent(navController, viewModel) // Passe o ViewModel para o Content
+    EvaluateContent(navController, viewModel)
+}
+
+private fun Double.format(digits: Int): String {
+    val factor = 10.0.pow(digits.toDouble())
+    return ((this * factor).roundToInt() / factor).toString()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) { // Recebe o ViewModel
+fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) {
     val scrollState = rememberScrollState()
-    val uiState by viewModel.uiState.collectAsState() // Observa o estado da UI do ViewModel
-    var isEditingName by remember { mutableStateOf(false) } // Adicione um estado para controlar a edição
+    val uiState by viewModel.uiState.collectAsState()
+    var isEditingName by remember { mutableStateOf(false) }
     val sharedViewModel: SharedEvaluationViewModel = koinInject()
+    var showImagePicker by remember { mutableStateOf(false) }
+
+    val handleLocationResult = { location: GpsLocation? ->
+        if (location != null) {
+            val lat = location.latitude.format(6)
+            val lon = location.longitude.format(6)
+            val formattedLocation = "Lat: $lat, Lon: $lon"
+            viewModel.updateLocation(formattedLocation)
+        } else {
+            viewModel.updateLocation("Não foi possível obter a localização")
+        }
+    }
+
+    val locationManager = rememberLocationManager(onLocationResult = handleLocationResult)
+
+    ImagePicker(
+        show = showImagePicker,
+        onImageSelected = { imagePath ->
+            viewModel.updateImagePath(imagePath)
+            showImagePicker = false
+        }
+    )
 
     Scaffold(
         topBar = {
@@ -110,7 +144,6 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "Avaliações" e nome da amostra
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -119,22 +152,22 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                     if (isEditingName) {
                         OutlinedTextField(
                             value = uiState.sampleName,
-                            onValueChange = { viewModel.updateSampleName(it) }, // Atualiza o nome no ViewModel
+                            onValueChange = { viewModel.updateSampleName(it) },
                             label = { Text("Nome da Amostra") },
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Button(onClick = { isEditingName = false }) { // Botão para finalizar a edição
+                        Button(onClick = { isEditingName = false }) {
                             Text("OK")
                         }
                     } else {
                         Text(
-                            text = uiState.sampleName, // Usa o estado do ViewModel
+                            text = uiState.sampleName,
                             style = MaterialTheme.typography.headlineSmall,
                             color = LightColorScheme.onBackground,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable {
-                                isEditingName = true // Altera o estado para editar
+                                isEditingName = true
                             }
                         )
                     }
@@ -162,7 +195,6 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Seleção do número de camadas
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -173,7 +205,6 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                             onClick = { viewModel.updateNumLayers(i) },
                             modifier = Modifier.size(56.dp),
                             colors = ButtonDefaults.buttonColors(
-                                // Use uiState.layers.size para verificar a camada selecionada
                                 containerColor = if (uiState.layers.size == i) LightColorScheme.primary else LightColorScheme.secondary,
                                 contentColor = if (uiState.layers.size == i) LightColorScheme.onPrimary else LightColorScheme.onSecondary
                             ),
@@ -185,13 +216,22 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                     }
                 }
 
-                // Campos de entrada para Local/Propriedade e Avaliador
                 OutlinedTextField(
                     value = uiState.location,
                     onValueChange = { viewModel.updateLocation(it) },
                     label = { Text("Local/propriedade (GPS)") },
                     placeholder = { Text("Ex: Fazenda Boa Esperança (GPS)") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            locationManager.requestLocation()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.GpsFixed,
+                                contentDescription = "Obter Localização GPS"
+                            )
+                        }
+                    }
                 )
 
                 OutlinedTextField(
@@ -204,7 +244,6 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Campos dinâmicos para Comprimento e Nota por camada
                 repeat(uiState.layers.size) { index ->
                     Text(
                         text = "Camada ${index + 1}:",
@@ -231,10 +270,18 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Botão para upload de arquivo (imagem)
+                if (uiState.imagePath != null) {
+                    AsyncImage(
+                        model = uiState.imagePath,
+                        contentDescription = "Imagem da amostra",
+                        modifier = Modifier.fillMaxWidth().height(200.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
                 Button(
                     onClick = {
-                        println("Clicado em Upload de arquivo")
+                        showImagePicker = true
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.6f)
@@ -263,7 +310,6 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Outras informações importantes
                 OutlinedTextField(
                     value = uiState.otherImportantInfo,
                     onValueChange = { viewModel.updateOtherImportantInfo(it) },
@@ -284,19 +330,14 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
 
                 Button(
                     onClick = {
-                        // 1. Calcule o escore médio
                         val averageScore = viewModel.calculateAverageScore()
 
-                        // 2. Obtenha os dados completos da avaliação
                         val evaluationData = viewModel.uiState.value
 
-                        // Adicione este log para verificar se evaluationData está completo antes de navegar
                         println("Dados da avaliação a serem salvos: $evaluationData")
 
-                        // 3. Salve o objeto de dados completo no ViewModel compartilhado
                         sharedViewModel.currentEvaluation = evaluationData
 
-                        // 4. Navegue para a tela de resultados, passando apenas o escore
                         navController.navigate("${NavigationRoutes.EvaluationResult}/${averageScore}")
                     },
                     modifier = Modifier

@@ -10,12 +10,13 @@ androidx-core = "1.16.0"
 androidx-espresso = "3.6.1"
 androidx-lifecycle = "2.9.0"
 androidx-testExt = "1.2.1"
+coilCompose = "3.2.0"
+coilNetworkOkhttp = "3.2.0"
 composeMultiplatform = "1.8.1"
 datastorePreferencesCore = "1.1.7"
 datastore = "1.1.7"
 gson = "2.13.1"
 junit = "4.13.2"
-kamelImageDefault = "1.0.6"
 kotlin = "2.1.21"
 koin = "4.0.0-RC1"
 androidx-material = "1.11.0"
@@ -26,12 +27,15 @@ materialIconsExtended = "1.7.8"
 room = "2.7.2"
 ksp = "2.1.21-2.0.1"
 sqlite = "2.5.2"
+play-services-location = "21.3.0"
 
 [libraries]
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferencesCore" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
-kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamelImageDefault" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }

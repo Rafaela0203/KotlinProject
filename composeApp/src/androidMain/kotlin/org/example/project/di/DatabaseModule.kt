@@ -13,6 +13,12 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE evaluations ADD COLUMN imagePath TEXT")
+    }
+}
+
 val databaseModule = module {
     single {
         Room.databaseBuilder(
@@ -20,7 +26,7 @@ val databaseModule = module {
             klass = AppDatabase::class.java,
             name = "vess_app.db"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
     }
 

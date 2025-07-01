@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.example.project.data.repository.EvaluationRepository
 import org.example.project.presentation.shared.SharedEvaluationViewModel
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 data class FinalEvaluationSummaryUiState(
     val averageScore: String = "N/A",
@@ -31,45 +36,50 @@ class FinalEvaluationSummaryViewModel(
         loadSummary()
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun loadSummary() {
-        val allEvaluations = sharedViewModel.evaluations
-        val totalSamples = allEvaluations.size
+        viewModelScope.launch {
+            val allEvaluations = sharedViewModel.evaluations
+            if (allEvaluations.isEmpty()) return@launch
 
-        if (totalSamples > 0) {
-            val totalScoreSum = allEvaluations.sumOf { evaluation ->
-                evaluation.layers.sumOf { layer ->
-                    (layer.length.toDoubleOrNull() ?: 0.0) * (layer.score.toDoubleOrNull() ?: 0.0)
-                }
-            }
-            val totalLengthSum = allEvaluations.sumOf { evaluation ->
-                evaluation.layers.sumOf { layer ->
-                    layer.length.toDoubleOrNull() ?: 0.0
-                }
-            }
-            val averageScore = if (totalLengthSum > 0) totalScoreSum / totalLengthSum else 0.0
-            val formattedAverageScore = averageScore.toString()
+            // --- Cálculos ---
+            val totalSamples = allEvaluations.size
+            val evaluatorName = allEvaluations.first().evaluator
 
+            // Cálculo do Escore Médio
+            val totalLengthSum = allEvaluations.sumOf { eval -> eval.layers.sumOf { it.length.toDoubleOrNull() ?: 0.0 } }
+            val weightedSum = allEvaluations.sumOf { eval ->
+                eval.layers.sumOf { (it.length.toDoubleOrNull() ?: 0.0) * (it.score.toDoubleOrNull() ?: 0.0) }
+            }
+            val averageScore = if (totalLengthSum > 0) weightedSum / totalLengthSum else 0.0
+
+            // Lógica para Decisão de Manejo
             val managementDecision = when {
-                averageScore >= 1.0 && averageScore <= 2.9 -> "Amostras com escores Qe-VESS de 1-2,9 indicam um solo com boa qualidade estrutural..."
-                averageScore >= 3.0 && averageScore <= 3.9 -> "Amostras com escores Qe-VESS de 3-3,9 indicam um solo com qualidade estrutural razoável que pode ser melhorado..."
-                averageScore >= 4.0 && averageScore <= 5.0 -> "Amostras com escores Qe-VESS de 4-5 sugerem danos às funções do solo..."
+                averageScore in 1.0..2.9 -> "Boa qualidade estrutural. Nenhuma mudança de manejo necessária."
+                averageScore in 3.0..3.9 -> "Qualidade estrutural razoável. Melhorias a longo prazo são recomendadas."
+                averageScore >= 4.0 -> "Qualidade estrutural pobre. Danos às funções do solo, intervenção direta pode ser necessária."
                 else -> "Escore fora do intervalo esperado."
             }
 
-            // TODO: Adicionar lógica para calcular a duração e obter o avaliador
-            val evaluatorName = allEvaluations.firstOrNull()?.evaluator ?: "N/A"
-            val startDate = "24 setembro 2023"
-            val startTime = "15 horas"
-            val evaluationDuration = "1h30min"
+            // Cálculo de Data, Hora e Duração
+            val startTimeMillis = sharedViewModel.currentSessionId ?: 0L
+            val endTimeMillis = sharedViewModel.sessionEndTime ?: startTimeMillis
+            val startInstant = Instant.fromEpochMilliseconds(startTimeMillis)
+            val startDateTime = startInstant.toLocalDateTime(TimeZone.currentSystemDefault())
 
-            _uiState.value = _uiState.value.copy(
-                averageScore = formattedAverageScore,
+            val duration = (endTimeMillis - startTimeMillis).milliseconds
+            val durationText = duration.toComponents { hours, minutes, seconds, _ ->
+                "${hours}h ${minutes}min ${seconds}s"
+            }
+
+            _uiState.value = FinalEvaluationSummaryUiState(
+                averageScore = averageScore.toString(),
                 managementDecisionForLocation = managementDecision,
                 totalSamples = totalSamples,
                 evaluatorName = evaluatorName,
-                startDate = startDate,
-                startTime = startTime,
-                evaluationDuration = evaluationDuration
+                startDate = "${startDateTime.dayOfMonth}/${startDateTime.monthNumber}/${startDateTime.year}",
+                startTime = "${startDateTime.hour}:${startDateTime.minute.toString().padStart(2, '0')}",
+                evaluationDuration = durationText
             )
         }
     }

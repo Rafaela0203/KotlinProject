@@ -166,24 +166,25 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Total de amostras: ${uiState.totalSamples}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = LightColorScheme.onBackground
+                        text = "Total de amostras: ${uiState.totalSamples}", // Já deve estar lá
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = "Avaliador: ${uiState.evaluatorName}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = LightColorScheme.onBackground
+                        text = "Avaliador: ${uiState.evaluatorName}", // Já deve estar lá
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    // --- VERIFIQUE E AJUSTE ESTAS LINHAS ---
+                    Text(
+                        text = "Data de Início: ${uiState.startDate}",
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = "Data de Início: ${uiState.startDate} às ${uiState.startTime}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = LightColorScheme.onBackground
+                        text = "Hora de Início: ${uiState.startTime}",
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         text = "Duração da avaliação: ${uiState.evaluationDuration}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = LightColorScheme.onBackground
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
 

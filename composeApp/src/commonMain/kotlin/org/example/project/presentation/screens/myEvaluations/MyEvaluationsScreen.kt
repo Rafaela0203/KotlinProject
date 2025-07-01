@@ -144,16 +144,21 @@ fun EvaluationItem(evaluation: EvaluationData, onClick: () -> Unit) {
                 color = LightColorScheme.onPrimaryContainer
             )
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = "Avaliador: ${evaluation.evaluator}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = LightColorScheme.onPrimaryContainer
             )
+
+            // --- ADICIONE ESTA LINHA DE VOLTA ---
             Text(
                 text = "Local: ${evaluation.location}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = LightColorScheme.onPrimaryContainer
             )
+            // ------------------------------------
+
             Text(
                 text = "Camadas avaliadas: ${evaluation.layers.size}",
                 style = MaterialTheme.typography.bodyMedium,

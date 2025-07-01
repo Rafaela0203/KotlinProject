@@ -19,43 +19,43 @@ class EvaluateViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        // O valor inicial será sobrescrito imediatamente no bloco init
         EvaluationData(
             sampleName = "Amostra Nº ${sharedViewModel.currentSampleIndex.value}",
             location = "",
             evaluator = "",
             layers = listOf(LayerData(length = "", score = "")),
             otherImportantInfo = "",
-            sessionId = sharedViewModel.currentSessionId ?: 0L // Pega o ID da sessão aqui
+            sessionId = sharedViewModel.currentSessionId ?: 0L,
+            imagePath = null
         )
     )
     val uiState: StateFlow<EvaluationData> = _uiState.asStateFlow()
 
     init {
-        // Atualiza o sessionId no estado assim que o ViewModel é criado
         _uiState.value = _uiState.value.copy(
             sessionId = sharedViewModel.currentSessionId ?: System.now().toEpochMilliseconds()
         )
 
-        // Colete o valor do contador de amostras para atualizar o nome
         viewModelScope.launch {
             sharedViewModel.currentSampleIndex.collect { index ->
                 _uiState.value = _uiState.value.copy(sampleName = "Amostra Nº $index")
             }
         }
     }
-    // 2. Crie funções para atualizar cada parte do estado
+
+    fun updateImagePath(path: String?) {
+        _uiState.value = _uiState.value.copy(imagePath = path)
+    }
+
     fun updateNumLayers(num: Int) {
         val currentLayers = _uiState.value.layers.toMutableList()
         if (num > currentLayers.size) {
-            // Aumenta o número de camadas, adicionando novas
+
             while (currentLayers.size < num) {
                 currentLayers.add(LayerData(length = "", score = ""))
             }
         } else if (num < currentLayers.size) {
-            // Diminui o número de camadas, removendo do final
             while (currentLayers.size > num) {
-                // Use removeAt() em vez de removeLast() para garantir a compatibilidade
                 currentLayers.removeAt(currentLayers.lastIndex)
             }
         }
@@ -75,7 +75,6 @@ class EvaluateViewModel(
     }
 
     fun updateLayerLength(index: Int, length: String) {
-        // Atualiza o comprimento de uma camada específica
         val updatedLayers = _uiState.value.layers.toMutableList()
         if (index < updatedLayers.size) {
             updatedLayers[index] = updatedLayers[index].copy(length = length)
@@ -84,7 +83,6 @@ class EvaluateViewModel(
     }
 
     fun updateLayerScore(index: Int, score: String) {
-        // Atualiza a nota de uma camada específica
         val updatedLayers = _uiState.value.layers.toMutableList()
         if (index < updatedLayers.size) {
             updatedLayers[index] = updatedLayers[index].copy(score = score)
@@ -96,7 +94,6 @@ class EvaluateViewModel(
         _uiState.value = _uiState.value.copy(otherImportantInfo = info)
     }
 
-    // 3. Implemente a lógica para calcular o escore
     fun calculateAverageScore(): Double {
         val layers = _uiState.value.layers
         val totalLength = layers.sumOf { it.length.toDoubleOrNull() ?: 0.0 }

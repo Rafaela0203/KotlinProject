@@ -242,12 +242,9 @@ fun EvaluationResultContent(
                         onClick = {
                             uiState.evaluationData?.let {
                                 sharedViewModel.addEvaluation(it)
-                                // Incremente o contador para a próxima amostra
-                                sharedViewModel.incrementSampleIndex()
-                                println("PRÓXIMA AMOSTRA clicado! Amostra adicionada e voltando para a avaliação.")
-                                navController.navigate(NavigationRoutes.Evaluate) {
-                                    popUpTo(NavigationRoutes.Evaluate) { inclusive = true }
-                                }
+                                sharedViewModel.endEvaluationSession()
+                                println("FINALIZAR clicado! Sessão finalizada.")
+                                navController.navigate(NavigationRoutes.FinalEvaluationSummary)
                             }
                         },
                         modifier = Modifier

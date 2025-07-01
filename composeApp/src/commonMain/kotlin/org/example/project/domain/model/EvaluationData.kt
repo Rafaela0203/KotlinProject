@@ -18,5 +18,6 @@ data class EvaluationData(
     val location: String,
     val evaluator: String,
     val layers: List<LayerData>,
-    val otherImportantInfo: String
+    val otherImportantInfo: String,
+    val imagePath: String? = null
 )
