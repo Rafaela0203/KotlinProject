@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument // Adicione esta importação
-import androidx.navigation.NavType // Adicione esta importação
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import org.example.project.presentation.screens.aboutApp.AboutAppScreen
 import org.example.project.presentation.screens.complementaryInfo.ComplementaryInfoScreen
 import org.example.project.presentation.screens.configuration.ConfigurationScreen
@@ -28,7 +28,6 @@ import org.example.project.presentation.screens.whatIsVESS.WhatIsVESSScreen
 import org.example.project.presentation.screens.whenToSample.WhenToSampleScreen
 import org.example.project.presentation.screens.whereToSample.WhereToSampleScreen
 import org.koin.compose.KoinContext
-import org.koin.compose.koinInject
 
 object NavigationRoutes {
     const val Home: String = "home"

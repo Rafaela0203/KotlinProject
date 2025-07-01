@@ -3,7 +3,6 @@ package org.example.project.presentation.screens.finalEvaluationSummary
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,13 +26,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,18 +38,12 @@ import androidx.navigation.NavController
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
 import org.koin.compose.viewmodel.koinViewModel
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 
 @Composable
 fun FinalEvaluationSummaryScreen (
     navController: NavController,
     viewModel: FinalEvaluationSummaryViewModel = koinViewModel()
 ){
-    // Opcional: use LaunchedEffect para acionar o carregamento do resumo
-    // LaunchedEffect(Unit) {
-    //     viewModel.loadSummary()
-    // }
     FinalEvaluationSummaryContent(navController, viewModel)
 }
 
@@ -61,7 +51,7 @@ fun FinalEvaluationSummaryScreen (
 @Composable
 fun FinalEvaluationSummaryContent(navController: NavController, viewModel: FinalEvaluationSummaryViewModel) {
     val scrollState = rememberScrollState()
-    val uiState by viewModel.uiState.collectAsState() // Observe o estado do ViewModel
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -101,7 +91,6 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "Escore Qe-VESS médio do local X:"
                 Text(
                     text = "Escore Qe-VESS médio do local X:",
                     style = MaterialTheme.typography.headlineSmall,
@@ -110,7 +99,6 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Valor do escore médio (do ViewModel)
                 Text(
                     text = uiState.averageScore,
                     style = MaterialTheme.typography.displayMedium,
@@ -121,7 +109,6 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                         .padding(horizontal = 24.dp, vertical = 12.dp)
                 )
 
-                // Fonte da informação
                 Text(
                     text = "Ball et al. (2017)",
                     style = MaterialTheme.typography.bodySmall,
@@ -131,7 +118,6 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Decisão de manejo para o local (do ViewModel)
                 Text(
                     text = "Decisão de manejo para o local:",
                     style = MaterialTheme.typography.titleMedium,
@@ -141,7 +127,7 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                 )
                 OutlinedTextField(
                     value = uiState.managementDecisionForLocation,
-                    onValueChange = { /* Este campo deve ser editável, conforme o escopo */ },
+                    onValueChange = { },
                     label = { Text("Descreva o manejo para o local...") },
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
                     modifier = Modifier
@@ -151,7 +137,6 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Resumo do total de amostras, data/hora, tempo de avaliação (do ViewModel)
                 Text(
                     text = "Resumo da avaliação:",
                     style = MaterialTheme.typography.titleMedium,
@@ -166,14 +151,13 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Total de amostras: ${uiState.totalSamples}", // Já deve estar lá
+                        text = "Total de amostras: ${uiState.totalSamples}",
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = "Avaliador: ${uiState.evaluatorName}", // Já deve estar lá
+                        text = "Avaliador: ${uiState.evaluatorName}",
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    // --- VERIFIQUE E AJUSTE ESTAS LINHAS ---
                     Text(
                         text = "Data de Início: ${uiState.startDate}",
                         style = MaterialTheme.typography.bodyLarge
@@ -190,11 +174,10 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botão "SALVAR"
                 Button(
                     onClick = {
                         viewModel.saveFinalEvaluation()
-                        navController.navigate(NavigationRoutes.MyEvaluations) {
+                        navController.navigate(NavigationRoutes.Home) {
                             popUpTo(NavigationRoutes.Home)
                         }
                     },

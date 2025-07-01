@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.example.project.data.repository.EvaluationRepository
 import org.example.project.presentation.shared.SharedEvaluationViewModel
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
@@ -42,18 +43,15 @@ class FinalEvaluationSummaryViewModel(
             val allEvaluations = sharedViewModel.evaluations
             if (allEvaluations.isEmpty()) return@launch
 
-            // --- Cálculos ---
             val totalSamples = allEvaluations.size
             val evaluatorName = allEvaluations.first().evaluator
 
-            // Cálculo do Escore Médio
             val totalLengthSum = allEvaluations.sumOf { eval -> eval.layers.sumOf { it.length.toDoubleOrNull() ?: 0.0 } }
             val weightedSum = allEvaluations.sumOf { eval ->
                 eval.layers.sumOf { (it.length.toDoubleOrNull() ?: 0.0) * (it.score.toDoubleOrNull() ?: 0.0) }
             }
             val averageScore = if (totalLengthSum > 0) weightedSum / totalLengthSum else 0.0
 
-            // Lógica para Decisão de Manejo
             val managementDecision = when {
                 averageScore in 1.0..2.9 -> "Boa qualidade estrutural. Nenhuma mudança de manejo necessária."
                 averageScore in 3.0..3.9 -> "Qualidade estrutural razoável. Melhorias a longo prazo são recomendadas."
@@ -61,7 +59,6 @@ class FinalEvaluationSummaryViewModel(
                 else -> "Escore fora do intervalo esperado."
             }
 
-            // Cálculo de Data, Hora e Duração
             val startTimeMillis = sharedViewModel.currentSessionId ?: 0L
             val endTimeMillis = sharedViewModel.sessionEndTime ?: startTimeMillis
             val startInstant = Instant.fromEpochMilliseconds(startTimeMillis)
@@ -77,7 +74,7 @@ class FinalEvaluationSummaryViewModel(
                 managementDecisionForLocation = managementDecision,
                 totalSamples = totalSamples,
                 evaluatorName = evaluatorName,
-                startDate = "${startDateTime.dayOfMonth}/${startDateTime.monthNumber}/${startDateTime.year}",
+                startDate = "${startDateTime.day}/${startDateTime.month.number}/${startDateTime.year}",
                 startTime = "${startDateTime.hour}:${startDateTime.minute.toString().padStart(2, '0')}",
                 evaluationDuration = durationText
             )

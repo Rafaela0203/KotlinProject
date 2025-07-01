@@ -19,7 +19,7 @@ class SharedEvaluationViewModel : ViewModel() {
 
     fun startNewEvaluationSession() {
         currentSessionId = Clock.System.now().toEpochMilliseconds()
-        sessionEndTime = null // Reseta o tempo final
+        sessionEndTime = null
         resetSampleIndex()
     }
 

@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.example.project.LightColorScheme
-import org.example.project.NavigationRoutes
 import EvaluationData
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -71,7 +70,7 @@ fun MyEvaluationsContent(navController: NavController, viewModel: MyEvaluationsV
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (uiState.isLoading) {
-                    CircularProgressIndicator() // Mostra um loading
+                    CircularProgressIndicator()
                 } else if (uiState.evaluationGroups.isEmpty()) {
                     Text(
                         text = "Nenhuma avaliação encontrada. Realize uma avaliação primeiro!",
@@ -83,7 +82,6 @@ fun MyEvaluationsContent(navController: NavController, viewModel: MyEvaluationsV
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Itera sobre os grupos de avaliação
                         items(uiState.evaluationGroups) { group ->
                             EvaluationGroupItem(group = group)
                         }
@@ -111,10 +109,8 @@ fun EvaluationGroupItem(group: EvaluationGroup) {
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Coluna interna para as amostras (não rolável, pois o LazyColumn já rola)
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 group.samples.forEach { evaluation ->
-                    // Reutiliza o item de avaliação que você já tinha
                     EvaluationItem(evaluation) {
                         println("Clicado na amostra: ${evaluation.sampleName}")
                     }
@@ -151,13 +147,11 @@ fun EvaluationItem(evaluation: EvaluationData, onClick: () -> Unit) {
                 color = LightColorScheme.onPrimaryContainer
             )
 
-            // --- ADICIONE ESTA LINHA DE VOLTA ---
             Text(
                 text = "Local: ${evaluation.location}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = LightColorScheme.onPrimaryContainer
             )
-            // ------------------------------------
 
             Text(
                 text = "Camadas avaliadas: ${evaluation.layers.size}",

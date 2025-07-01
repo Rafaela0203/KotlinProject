@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import EvaluationData
 import org.example.project.data.repository.EvaluationRepository
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -38,23 +38,20 @@ class MyEvaluationsViewModel(
 
             val groups = groupedMap.map { (sessionId, samples) ->
 
-                // --- LÓGICA DE FORMATAÇÃO COM KOTLINX-DATETIME ---
                 val instant = Instant.fromEpochMilliseconds(sessionId)
                 val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
 
-                // Formatação manual para "dd/MM/yyyy HH:mm"
-                val day = localDateTime.dayOfMonth.toString().padStart(2, '0')
-                val month = localDateTime.monthNumber.toString().padStart(2, '0')
+                val day = localDateTime.day.toString().padStart(2, '0')
+                val month = localDateTime.month.number.toString().padStart(2, '0')
                 val year = localDateTime.year
                 val hour = localDateTime.hour.toString().padStart(2, '0')
                 val minute = localDateTime.minute.toString().padStart(2, '0')
 
                 val formattedDate = "$day/$month/$year, $hour:$minute"
-                // ----------------------------------------------------
 
                 EvaluationGroup(
                     sessionId = sessionId,
-                    sessionDate = formattedDate, // Usa a data formatada
+                    sessionDate = formattedDate,
                     samples = samples
                 )
             }.sortedByDescending { it.sessionId }
