@@ -54,7 +54,7 @@ fun WhereToSampleContent(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Onde amostrar", // Título da TopAppBar
+                        text = "Onde amostrar",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -63,9 +63,9 @@ fun WhereToSampleContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Usando ArrowBack padrão
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
                             tint = LightColorScheme.onPrimary
                         )
@@ -81,22 +81,20 @@ fun WhereToSampleContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "Onde amostrar" no conteúdo
                 Text(
                     text = "Onde amostrar",
                     style = MaterialTheme.typography.headlineMedium,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Descrição do local de amostragem
                 Text(
                     text = "O VESS pode ser aplicado para qualquer solo, uso e manejo. É importante selecionar a área de interesse e sempre comparar com uma área com boa qualidade estrutural (mata nativa ou solo não cultivados). É importante comparar, por exemplo, áreas com baixa produtividade e área com alta produtividade. Dentro de uma área homogênea avalie 3 a 5 pontos (Guimarães et al., 2017).",
                     style = MaterialTheme.typography.bodyLarge,
@@ -104,16 +102,15 @@ fun WhereToSampleContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(32.dp)) // Espaço antes dos botões
+                Spacer(modifier = Modifier.height(32.dp))
 
-                // Botões de navegação "Voltar" e "Próximo"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { navController.popBackStack() }, // Volta para a tela anterior
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)
@@ -131,9 +128,8 @@ fun WhereToSampleContent(navController: NavController) {
 
                     Button(
                         onClick = {
-                            // Lógica para navegar para a próxima tela de tutorial/passo
                             println("Clicado em Próximo na tela Onde Amostrar")
-                            navController.navigate(NavigationRoutes.WhenToSample) // Exemplo para a próxima tela, como "Quando amostrar"
+                            navController.navigate(NavigationRoutes.WhenToSample)
                         },
                         modifier = Modifier
                             .weight(1f)

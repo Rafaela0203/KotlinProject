@@ -53,7 +53,7 @@ fun AboutAppContent(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Sobre o App", // Título da TopAppBar atualizado para "Sobre o App"
+                        text = "Sobre o App",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -62,7 +62,7 @@ fun AboutAppContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
@@ -80,23 +80,21 @@ fun AboutAppContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título principal do conteúdo
                 Text(
                     text = "SOBRE O APP",
                     style = MaterialTheme.typography.headlineMedium,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
-                Spacer(modifier = Modifier.height(8.dp)) // Pequeno espaço
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Versão
                 Text(
                     text = "Versão 3.0",
                     style = MaterialTheme.typography.bodyLarge,
@@ -110,9 +108,9 @@ fun AboutAppContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espaço entre seções
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Coordenadora do projeto
+
                 Text(
                     text = "Coordenadora do projeto",
                     style = MaterialTheme.typography.titleMedium,
@@ -129,7 +127,6 @@ fun AboutAppContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Desenvolvedores
                 Text(
                     text = "Desenvolvedores",
                     style = MaterialTheme.typography.titleMedium,
@@ -138,7 +135,9 @@ fun AboutAppContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
                 Text(
-                    text = "Prof. Vinicius Pegorini – Universidade Tecnológica Federal do Paraná",
+                    text = "Prof. Vinicius Pegorini – Universidade Tecnológica Federal do Paraná\n" +
+                            "Rafaela Cechim dos Santos – Universidade Tecnológica Federal do Paraná\n" +
+                            "Ana Paula Volpatto – Universidade Tecnológica Federal do Paraná",
                     style = MaterialTheme.typography.bodyLarge,
                     color = LightColorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth()
@@ -146,7 +145,6 @@ fun AboutAppContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Colaboradores
                 Text(
                     text = "Colaboradores",
                     style = MaterialTheme.typography.titleMedium,
@@ -170,7 +168,6 @@ fun AboutAppContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Suporte financeiro
                 Text(
                     text = "Suporte financeiro",
                     style = MaterialTheme.typography.titleMedium,
@@ -189,7 +186,6 @@ fun AboutAppContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Fale conosco
                 Text(
                     text = "Fale conosco",
                     style = MaterialTheme.typography.titleMedium,
@@ -214,7 +210,6 @@ fun AboutAppContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botão de navegação "Voltar"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,

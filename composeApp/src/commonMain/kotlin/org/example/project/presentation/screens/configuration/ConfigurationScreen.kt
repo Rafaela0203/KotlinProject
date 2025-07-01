@@ -48,14 +48,14 @@ fun ConfigurationScreen (
     navController: NavController,
     viewModel: ConfigurationViewModel = koinViewModel()
 ){
-    ConfigurationContent(navController, viewModel) // Passe o ViewModel para o Content
+    ConfigurationContent(navController, viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfigurationContent(navController: NavController, viewModel: ConfigurationViewModel) { // Recebe o ViewModel
+fun ConfigurationContent(navController: NavController, viewModel: ConfigurationViewModel) {
     val scrollState = rememberScrollState()
-    val uiState by viewModel.uiState.collectAsState() // Observa o estado do ViewModel
+    val uiState by viewModel.uiState.collectAsState()
     var termsAccepted by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -74,7 +74,7 @@ fun ConfigurationContent(navController: NavController, viewModel: ConfigurationV
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Usando ArrowBack padrão
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
                             tint = LightColorScheme.onPrimary
                         )

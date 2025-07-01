@@ -1,7 +1,6 @@
 package org.example.project.presentation.screens.sampleFragmentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,7 +59,7 @@ fun SampleFragmentationContent(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Fragmentação da amostra", // Título da TopAppBar
+                        text = "Fragmentação da amostra",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -69,7 +68,7 @@ fun SampleFragmentationContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
@@ -98,7 +97,7 @@ fun SampleFragmentationContent(navController: NavController) {
                     style = MaterialTheme.typography.headlineMedium,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
                 Text(
@@ -127,7 +126,7 @@ fun SampleFragmentationContent(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { navController.popBackStack() }, // Volta para a tela anterior
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)

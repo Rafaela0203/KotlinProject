@@ -1,4 +1,3 @@
-// KotlinProject/composeApp/src/commonMain/kotlin/org/example/project/presentation/screens/home/HomeViewModel.kt
 package org.example.project.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,7 @@ import kotlinx.coroutines.launch
 import org.example.project.data.repository.ConfigurationRepository // Importe o repositório
 
 class HomeViewModel(
-    private val configurationRepository: ConfigurationRepository // Injete o repositório
+    private val configurationRepository: ConfigurationRepository
 ) : ViewModel() {
 
     private val _navigateToConfiguration = MutableStateFlow(false)

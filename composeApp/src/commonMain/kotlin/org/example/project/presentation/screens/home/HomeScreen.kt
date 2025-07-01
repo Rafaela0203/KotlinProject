@@ -1,4 +1,3 @@
-// KotlinProject/composeApp/src/commonMain/kotlin/org/example/project/presentation/screens/home/HomeScreen.kt
 package org.example.project.presentation.screens.home
 
 import androidx.compose.foundation.background
@@ -6,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,7 +20,6 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.HomeRepairService
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Share
@@ -55,9 +52,7 @@ import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Extension
@@ -78,14 +73,14 @@ fun HomeScreen (
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Receber o ViewModel aqui
+fun HomeContent(navController: NavController, viewModel: HomeViewModel) {
     val scrollState = rememberScrollState()
     val sharedViewModel: SharedEvaluationViewModel = koinInject()
     val navigateToConfiguration by viewModel.navigateToConfiguration.collectAsState()
 
     if (navigateToConfiguration) {
         LaunchedEffect(key1 = Unit) {
-            viewModel.resetNavigateToConfiguration() // Reset o estado após a navegação
+            viewModel.resetNavigateToConfiguration()
             navController.navigate(NavigationRoutes.Configuration)
         }
     }
@@ -155,7 +150,7 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-                HorizontalDottedLineWithText(text = "Processo de avaliação") // Usar Composable com texto
+                HorizontalDottedLineWithText(text = "Processo de avaliação")
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
@@ -211,7 +206,7 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-                HorizontalDottedLineWithText(text = "Extras") // Usar Composable com texto
+                HorizontalDottedLineWithText(text = "Extras")
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
@@ -270,12 +265,12 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center, // Centralizei o botão
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.Top
 
                 ) {
                     IconButton(
-                        onClick = { println("Botão de Compartilhar clicado") }, // Lógica de compartilhamento
+                        onClick = { println("Botão de Compartilhar clicado") },
                         modifier = Modifier
                             .size(48.dp)
                             .background(LightColorScheme.primaryContainer, shape = CircleShape)
@@ -306,7 +301,7 @@ fun MenuButton(
         modifier = Modifier
             .height(120.dp)
             .width(165.dp)
-            .padding(4.dp), // Adicionado padding para consistência visual
+            .padding(4.dp),
         colors = ButtonDefaults.buttonColors(containerColor = LightColorScheme.primaryContainer),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -324,7 +319,7 @@ fun MenuButton(
                 text = text,
                 color = LightColorScheme.onPrimaryContainer,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold, // Adicionado de volta para consistência
+                fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
@@ -339,7 +334,6 @@ fun HorizontalDottedLineWithText(text: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        // Parte esquerda da linha pontilhada
         Spacer(
             modifier = Modifier
                 .weight(1f)
@@ -354,7 +348,6 @@ fun HorizontalDottedLineWithText(text: String) {
             modifier = Modifier.padding(horizontal = 8.dp),
             textAlign = TextAlign.Center
         )
-        // Parte direita da linha pontilhada
         Spacer(
             modifier = Modifier
                 .weight(1f)

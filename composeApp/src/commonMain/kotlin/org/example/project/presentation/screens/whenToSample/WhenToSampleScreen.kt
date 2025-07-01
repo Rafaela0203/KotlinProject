@@ -54,7 +54,7 @@ fun WhenToSampleContent(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Quando amostrar", // Título da TopAppBar
+                        text = "Quando amostrar",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -63,7 +63,7 @@ fun WhenToSampleContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
@@ -81,22 +81,20 @@ fun WhenToSampleContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "Quando amostrar" no conteúdo
                 Text(
                     text = "Quando amostrar",
                     style = MaterialTheme.typography.headlineMedium,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Descrição do quando amostrar
                 Text(
                     text = "O VESS pode ser realizado em qualquer época do ano. Em solos argilosos deve-se esperar pelo menos 4 dias após uma chuva (> 50 mm) (Ball et al., 2017). Se o solo estiver muito seco ou muito úmido será difícil de ser obtida uma amostra representativa. Raízes são melhores vistas em uma área com cultura já estabelecida ou logo após a colheita.",
                     style = MaterialTheme.typography.bodyLarge,
@@ -104,16 +102,15 @@ fun WhenToSampleContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(32.dp)) // Espaço antes dos botões
+                Spacer(modifier = Modifier.height(32.dp))
 
-                // Botões de navegação "Voltar" e "Próximo"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { navController.popBackStack() }, // Volta para a tela anterior
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)
@@ -131,9 +128,8 @@ fun WhenToSampleContent(navController: NavController) {
 
                     Button(
                         onClick = {
-                            // Lógica para navegar para a próxima tela de tutorial/passo
                             println("Clicado em Próximo na tela Quando Amostrar")
-                            navController.navigate(NavigationRoutes.SampleExtraction) // Exemplo para a próxima tela
+                            navController.navigate(NavigationRoutes.SampleExtraction)
                         },
                         modifier = Modifier
                             .weight(1f)

@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.example.project.LightColorScheme
-import org.example.project.NavigationRoutes // Mantenha esta importação, mesmo que não navegue para 'Próximo'
+import org.example.project.NavigationRoutes
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -54,7 +54,7 @@ fun WhatIsVESSContent(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "O que é o VESS", // Título da TopAppBar atualizado
+                        text = "O que é o VESS",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -63,7 +63,7 @@ fun WhatIsVESSContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
@@ -81,22 +81,20 @@ fun WhatIsVESSContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "O QUE É O VESS" no conteúdo (opcional, já está na TopAppBar)
                 Text(
                     text = "O QUE É O VESS",
                     style = MaterialTheme.typography.headlineMedium,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Primeiro parágrafo
                 Text(
                     text = "A Avaliação Visual da Estrutura do Solo (VESS) é um teste de pá em que se avalia a qualidade estrutural (Qe) do solo de forma visual e tátil. Os critérios avaliados para a atribuição de uma nota são presença de poros, tamanho, resistência e forma de agregados, presença ou não de raízes, entre outras. A nota pode variar entre Qe1 (ótimo) a Qe5 (ruim). A partir dessa nota, pode-se realizar inferências e tomar decisões em relação ao manejo do solo (Guimarães et al., 2011; Ball et al., 2017).",
                     style = MaterialTheme.typography.bodyLarge,
@@ -104,7 +102,6 @@ fun WhatIsVESSContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Segundo parágrafo
                 Text(
                     text = "O VESS foi desenvolvido a partir da metodologia de Peerlkamp (1959) e apresentado em sua primeira versão por Ball et al. (2007). Ajustes foram realizados por Guimarães et al. (2011), sendo esta a versão utilizada para este aplicativo. O VESS é amplamente difundido no mundo, sendo testado para uma grande variedade de solos (Franco et al., 2019).",
                     style = MaterialTheme.typography.bodyLarge,
@@ -112,7 +109,6 @@ fun WhatIsVESSContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Informações adicionais com links (apenas texto por enquanto, links podem ser implementados com Browser.openUrl em KMP)
                 Text(
                     text = "Mais informações podem ser encontradas em: https://www.sruc.ac.uk/vess (Inglês) ou http://paginapessoal.utfpr.edu.br/rachelguimaraes/vess (Português).",
                     style = MaterialTheme.typography.bodyLarge,
@@ -120,18 +116,17 @@ fun WhatIsVESSContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(32.dp)) // Espaço antes do botão de voltar
+                Spacer(modifier = Modifier.height(32.dp))
 
-                // Botão de navegação "Voltar"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center, // Centraliza o botão
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { navController.popBackStack() }, // Volta para a tela anterior
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier
-                            .fillMaxWidth(0.6f) // Adapta a largura
+                            .fillMaxWidth(0.6f)
                             .height(56.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = LightColorScheme.primary),
                         shape = RoundedCornerShape(12.dp)
@@ -144,7 +139,7 @@ fun WhatIsVESSContent(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp)) // Espaço final para o scroll
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     )

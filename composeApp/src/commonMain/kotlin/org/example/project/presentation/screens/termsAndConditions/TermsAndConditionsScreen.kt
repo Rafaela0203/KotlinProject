@@ -1,6 +1,5 @@
 package org.example.project.presentation.screens.termsAndConditions
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox // Import Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,14 +51,14 @@ fun TermsAndConditionsScreen (
 @Composable
 fun TermsAndConditionsContent(navController: NavController) {
     val scrollState = rememberScrollState()
-    var agreedToTerms by remember { mutableStateOf(false) } // State for the agreement
+    var agreedToTerms by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Termos e condições", // Título da TopAppBar atualizado
+                        text = "Termos e condições",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -69,7 +67,7 @@ fun TermsAndConditionsContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
@@ -87,13 +85,12 @@ fun TermsAndConditionsContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título principal do conteúdo (pode ser removido se a TopAppBar for suficiente)
                 Text(
                     text = "Termos e condições",
                 style = MaterialTheme.typography.headlineMedium,
@@ -103,7 +100,6 @@ fun TermsAndConditionsContent(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Introdução
                 Text(
                     text = "O presente termo e condições de uso visa regular a utilização dos USUÁRIOS ao Aplicativo VESS.",
                     style = MaterialTheme.typography.bodyLarge,
@@ -119,7 +115,6 @@ fun TermsAndConditionsContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // DO OBJETIVO
                 Text(
                     text = "DO OBJETIVO",
                     style = MaterialTheme.typography.titleMedium,
@@ -142,7 +137,6 @@ fun TermsAndConditionsContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // COMUNICAÇÕES
                 Text(
                     text = "COMUNICAÇÕES",
                     style = MaterialTheme.typography.titleMedium,
@@ -159,7 +153,6 @@ fun TermsAndConditionsContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // COMPARTILHAMENTO DE DADOS COM OS DESENVOLVEDORES
                 Text(
                     text = "COMPARTILHAMENTO DE DADOS COM OS DESENVOLVEDORES",
                     style = MaterialTheme.typography.titleMedium,
@@ -200,7 +193,6 @@ fun TermsAndConditionsContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botão de navegação "Voltar"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,

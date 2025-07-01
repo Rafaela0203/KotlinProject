@@ -1,4 +1,3 @@
-// KotlinProject/composeApp/src/iosMain/kotlin/org/example/project/data/repository/ConfigurationRepositoryImpl.kt
 package org.example.project.data.repository
 
 import org.example.project.domain.model.ConfigurationData
@@ -17,7 +16,7 @@ class ConfigurationRepositoryImpl : ConfigurationRepository {
     override suspend fun saveConfiguration(configuration: ConfigurationData) {
         val configJson = Json.encodeToString(configuration)
         userDefaults.setObject(configJson, forKey = PreferencesKeys.CONFIGURATION_DATA)
-        userDefaults.synchronize() // Força a sincronização (opcional, mas boa prática)
+        userDefaults.synchronize()
     }
 
     override suspend fun getConfiguration(): ConfigurationData {
@@ -25,7 +24,6 @@ class ConfigurationRepositoryImpl : ConfigurationRepository {
         return if (!configJson.isNullOrEmpty()) {
             Json.decodeFromString<ConfigurationData>(configJson)
         } else {
-            // Retorna uma configuração padrão se não houver nada salvo
             ConfigurationData(
                 name = "",
                 email = "",
@@ -39,7 +37,6 @@ class ConfigurationRepositoryImpl : ConfigurationRepository {
 
     override suspend fun isConfigurationComplete(): Boolean {
         val config = getConfiguration()
-        // Defina seus critérios para "configuração completa" aqui
         return config.name.isNotBlank() &&
                 config.email.isNotBlank() &&
                 config.country.isNotBlank() &&

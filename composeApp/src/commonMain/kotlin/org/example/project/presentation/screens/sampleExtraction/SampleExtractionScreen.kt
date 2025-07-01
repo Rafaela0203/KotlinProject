@@ -1,7 +1,6 @@
 package org.example.project.presentation.screens.sampleExtraction
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,7 +59,7 @@ fun SampleExtractionContent(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Extração da amostra", // Título da TopAppBar
+                        text = "Extração da amostra",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -69,7 +68,7 @@ fun SampleExtractionContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { // Botão de voltar
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
@@ -87,11 +86,11 @@ fun SampleExtractionContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
                 Text(
@@ -99,7 +98,7 @@ fun SampleExtractionContent(navController: NavController) {
                     style = MaterialTheme.typography.headlineMedium,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
                 Text(
@@ -122,14 +121,13 @@ fun SampleExtractionContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botões de navegação "Voltar" e "Próximo"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { navController.popBackStack() }, // Volta para a tela anterior
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)
@@ -147,9 +145,8 @@ fun SampleExtractionContent(navController: NavController) {
 
                     Button(
                         onClick = {
-                            // Lógica para navegar para a próxima tela de tutorial/passo
                             println("Clicado em Próximo na tela Extração de Amostra")
-                            navController.navigate(NavigationRoutes.SampleFragmentation) // Próxima tela lógica
+                            navController.navigate(NavigationRoutes.SampleFragmentation)
                         },
                         modifier = Modifier
                             .weight(1f)

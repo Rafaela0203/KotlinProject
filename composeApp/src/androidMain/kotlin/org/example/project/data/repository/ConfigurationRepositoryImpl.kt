@@ -34,6 +34,6 @@ class ConfigurationRepositoryImpl(private val context: Context) : ConfigurationR
     }
 
     override suspend fun hasConfiguration(): Boolean = withContext(Dispatchers.IO) {
-        prefs.all.isNotEmpty() // Uma maneira simples de verificar se há alguma preferência salva
+        prefs.all.isNotEmpty()
     }
 }

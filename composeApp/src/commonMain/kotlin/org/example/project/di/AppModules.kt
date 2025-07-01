@@ -1,9 +1,5 @@
-// KotlinProject/composeApp/src/commonMain/kotlin/org/example/project/di/AppModules.kt
 package org.example.project.di
 
-import AppDatabase
-import androidx.room.Room
-import org.example.project.data.repository.ConfigurationRepository
 import org.example.project.presentation.screens.aboutApp.AboutAppViewModel
 import org.example.project.presentation.screens.complementaryInfo.ComplementaryInfoViewModel
 import org.example.project.presentation.screens.configuration.ConfigurationViewModel
@@ -76,10 +72,9 @@ val viewModelModule = module {
         TermsAndConditionsViewModel()
     }
     viewModel {
-        MyEvaluationsViewModel(get()) // Adicione esta linha
+        MyEvaluationsViewModel(get())
     }
 
-    // Adicione a definição do ViewModel Compartilhado como um singleton
     single { SharedEvaluationViewModel() }
 }
 

@@ -1,4 +1,3 @@
-// KotlinProject/composeApp/src/commonMain/kotlin/org/example/project/App.kt
 package org.example.project
 
 import androidx.compose.material3.MaterialTheme
@@ -116,7 +115,6 @@ fun App() {
                     arguments = listOf(navArgument("score") { type = NavType.FloatType })
                 ) { backStackEntry ->
                     val score = backStackEntry.arguments?.getFloat("score")
-                    // Note que não precisamos mais do 'evaluationDataJson' aqui
                     EvaluationResultScreen(navController, score = score)
                 }
 
@@ -129,21 +127,21 @@ fun App() {
 }
 
 val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF6B4423), // Marrom escuro para elementos primários
-    onPrimary = Color.White, // Cor do texto sobre a cor primária
-    primaryContainer = Color(0xFFC7A88B), // Container primário, pode ser usado para botões, cards
-    onPrimaryContainer = Color.Black, // Cor do texto sobre o container primário
-    secondary = Color(0xFFC7A88B), // Marrom claro para elementos secundários (botões de menu)
-    onSecondary = Color.White, // Cor do texto sobre a cor secundária
-    secondaryContainer = Color(0xFFA0846C), // Container secundário
-    onSecondaryContainer = Color.White, // Cor do texto sobre o container secundário
-    tertiary = Color(0xFF4285F4), // Cor terciária (ex: Azul do Google para "Editar")
-    onTertiary = Color.White, // Cor do texto sobre a cor terciária
-    background = Color(0xFFEFE9DC), // Fundo bege claro da tela
-    onBackground = Color.Black, // Cor do texto sobre o fundo
-    surface = Color.White, // Cor de superfície (ex: para Cards)
-    onSurface = Color.Black, // Cor do texto sobre a superfície
-    error = Color(0xFFB00020), // Cor de erro
-    onError = Color.White, // Cor do texto sobre erro
-    outline = Color(0xFF6B4423) // Cor para contornos de campos de texto, etc.
+    primary = Color(0xFF6B4423),
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFFC7A88B),
+    onPrimaryContainer = Color.Black,
+    secondary = Color(0xFFC7A88B),
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFA0846C),
+    onSecondaryContainer = Color.White,
+    tertiary = Color(0xFF4285F4),
+    onTertiary = Color.White,
+    background = Color(0xFFEFE9DC),
+    onBackground = Color.Black,
+    surface = Color.White,
+    onSurface = Color.Black,
+    error = Color(0xFFB00020),
+    onError = Color.White,
+    outline = Color(0xFF6B4423)
 )
