@@ -8,6 +8,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument // Adicione esta importação
+import androidx.navigation.NavType // Adicione esta importação
 import org.example.project.presentation.screens.aboutApp.AboutAppScreen
 import org.example.project.presentation.screens.complementaryInfo.ComplementaryInfoScreen
 import org.example.project.presentation.screens.configuration.ConfigurationScreen
@@ -43,9 +45,9 @@ object NavigationRoutes {
     const val AboutApp: String = "aboutApp"
     const val Configuration: String = "configuration"
     const val Evaluate: String = "evaluate"
-    const val TermsAndConditions: String = "termsAndConditions"
     const val EvaluationResult: String = "evaluationResult"
     const val FinalEvaluationSummary: String = "finalEvaluationSummary"
+    const val TermsAndConditions: String = "termsAndConditions"
 }
 
 @Composable
@@ -55,14 +57,13 @@ fun App() {
     KoinContext {
         MaterialTheme (
             colorScheme = LightColorScheme
-
         ) {
             NavHost(
                 navController = navController,
                 startDestination = NavigationRoutes.Home
             ) {
                 composable(NavigationRoutes.Home) {
-                    HomeScreen(navController = navController) // Pass navController para HomeScreen
+                    HomeScreen(navController = navController)
                 }
                 composable(NavigationRoutes.Evaluate) {
                     EvaluateScreen(
@@ -108,15 +109,20 @@ fun App() {
                 composable(NavigationRoutes.TermsAndConditions) {
                     TermsAndConditionsScreen(navController)
                 }
-                composable(NavigationRoutes.EvaluationResult) {
-                    EvaluationResultScreen(navController)
+
+                composable(
+                    "${NavigationRoutes.EvaluationResult}/{score}",
+                    arguments = listOf(navArgument("score") { type = NavType.FloatType })
+                ) { backStackEntry ->
+                    val score = backStackEntry.arguments?.getFloat("score")
+                    // Note que não precisamos mais do 'evaluationDataJson' aqui
+                    EvaluationResultScreen(navController, score = score)
                 }
+
                 composable(NavigationRoutes.FinalEvaluationSummary) {
                     FinalEvaluationSummaryScreen(navController)
                 }
-
             }
-
         }
     }
 }

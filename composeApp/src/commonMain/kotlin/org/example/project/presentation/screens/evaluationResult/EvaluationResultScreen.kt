@@ -28,12 +28,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,27 +38,38 @@ import androidx.navigation.NavController
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import org.example.project.presentation.shared.SharedEvaluationViewModel // Importe o ViewModel compartilhado
+import org.koin.compose.koinInject
 
 @Composable
 fun EvaluationResultScreen (
     navController: NavController,
-    viewModel: EvaluationResultViewModel = koinViewModel()
+    score: Float? = null,
+    viewModel: EvaluationResultViewModel = koinViewModel(),
+    sharedViewModel: SharedEvaluationViewModel = koinInject() // Injete o ViewModel compartilhado aqui
 ){
-    EvaluationResultContent(navController)
+    LaunchedEffect(key1 = score) {
+        if (score != null) {
+            // Notifique o ViewModel com o escore e os dados completos
+            viewModel.loadEvaluationResult(score, sharedViewModel.lastEvaluationData)
+        }
+    }
+
+    // Corrija a chamada: passe sharedViewModel como parâmetro
+    EvaluationResultContent(navController, viewModel, sharedViewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EvaluationResultContent(navController: NavController) {
+fun EvaluationResultContent(
+    navController: NavController,
+    viewModel: EvaluationResultViewModel,
+    sharedViewModel: SharedEvaluationViewModel // Adicione este parâmetro
+) {
     val scrollState = rememberScrollState()
-
-    // Mock data for demonstration purposes, replace with actual ViewModel data passed from EvaluateScreen
-    val sampleScore = "3.1" // Example score for a single sample
-    val managementDecision = "Amostras com escores Qe-VESS de 3-3,9 indicam um solo com qualidade estrutural razoável que pode ser melhorado..." //
-    val evaluationSummary = "Comprimento camada 1: 4 cm; nota 1: 1\n" + //
-            "Comprimento camada 2: 12 cm; nota 2: 3\n" +
-            "Comprimento camada 3: 9 cm; nota 3: 4"
-    val otherInfoText = "amostra muito seca; foi muito difícil cavar a trincheira/extrair a amostra do perfil do solo; raízes estavam achatadas/tortuosas; avaliação realizada em pós-colheita do milho/ jan. 2023; solo argiloso." //
+    val uiState by viewModel.uiState.collectAsState() // Observe o estado do ViewModel
 
     Scaffold(
         topBar = {
@@ -111,9 +118,9 @@ fun EvaluationResultContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
                 )
 
-                // Valor do escore (ex: 3.1)
+                // Valor do escore, agora vindo do ViewModel
                 Text(
-                    text = sampleScore,
+                    text = uiState.sampleScore,
                     style = MaterialTheme.typography.displayMedium,
                     color = LightColorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
@@ -132,7 +139,7 @@ fun EvaluationResultContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Decisão de manejo
+                // Decisão de manejo, vindo do ViewModel
                 Text(
                     text = "Decisão de manejo:",
                     style = MaterialTheme.typography.titleMedium,
@@ -141,7 +148,7 @@ fun EvaluationResultContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
                 OutlinedTextField(
-                    value = managementDecision,
+                    value = uiState.managementDecision,
                     onValueChange = { /* Não editável, apenas exibição */ },
                     readOnly = true, // Torna o campo somente leitura
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
@@ -152,7 +159,7 @@ fun EvaluationResultContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Resumo da avaliação
+                // Resumo da avaliação, vindo do ViewModel
                 Text(
                     text = "Resumo da avaliação:",
                     style = MaterialTheme.typography.titleMedium,
@@ -161,7 +168,7 @@ fun EvaluationResultContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
                 OutlinedTextField(
-                    value = evaluationSummary,
+                    value = uiState.evaluationSummary,
                     onValueChange = { /* Não editável, apenas exibição */ },
                     readOnly = true, // Torna o campo somente leitura
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
@@ -172,7 +179,7 @@ fun EvaluationResultContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Outras informações importantes
+                // Outras informações importantes, vindo do ViewModel
                 Text(
                     text = "Outras informações importantes:",
                     style = MaterialTheme.typography.titleMedium,
@@ -181,7 +188,7 @@ fun EvaluationResultContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
                 OutlinedTextField(
-                    value = otherInfoText,
+                    value = uiState.otherInfoText,
                     onValueChange = { /* Não editável, apenas exibição */ },
                     readOnly = true, // Torna o campo somente leitura
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
@@ -200,9 +207,12 @@ fun EvaluationResultContent(navController: NavController) {
                 ) {
                     Button(
                         onClick = {
-                            // Lógica para finalizar a avaliação e navegar para a tela final de resumo (FinalEvaluationSummaryScreen)
-                            println("FINALIZAR clicado!")
-                            navController.navigate(NavigationRoutes.FinalEvaluationSummary) // Navega para o resumo final
+                            // Use o '?.let' para garantir que evaluationData não é nulo antes de adicionar
+                            uiState.evaluationData?.let {
+                                sharedViewModel.addEvaluation(it)
+                                println("FINALIZAR clicado! Amostra adicionada à lista compartilhada.")
+                                navController.navigate(NavigationRoutes.FinalEvaluationSummary)
+                            }
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -221,12 +231,12 @@ fun EvaluationResultContent(navController: NavController) {
 
                     Button(
                         onClick = {
-                            // Lógica para iniciar a avaliação de uma NOVA amostra (voltar para EvaluateScreen)
-                            println("PRÓXIMA AMOSTRA clicado!")
-                            // Limpar estados da avaliação atual se necessário antes de navegar
-                            navController.navigate(NavigationRoutes.Evaluate) {
-                                popUpTo(NavigationRoutes.Evaluate) {
-                                    inclusive = true // Limpa a pilha de volta até Evaluate, iniciando uma nova avaliação
+                            // Use o '?.let' para garantir que evaluationData não é nulo antes de adicionar
+                            uiState.evaluationData?.let {
+                                sharedViewModel.addEvaluation(it)
+                                println("PRÓXIMA AMOSTRA clicado! Amostra adicionada e voltando para a avaliação.")
+                                navController.navigate(NavigationRoutes.Evaluate) {
+                                    popUpTo(NavigationRoutes.Evaluate) { inclusive = true }
                                 }
                             }
                         },

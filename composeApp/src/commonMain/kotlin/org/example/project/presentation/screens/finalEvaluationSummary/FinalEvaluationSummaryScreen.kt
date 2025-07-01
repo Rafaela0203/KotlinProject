@@ -42,37 +42,33 @@ import androidx.navigation.NavController
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun FinalEvaluationSummaryScreen (
     navController: NavController,
     viewModel: FinalEvaluationSummaryViewModel = koinViewModel()
 ){
-    FinalEvaluationSummaryContent(navController)
+    // Opcional: use LaunchedEffect para acionar o carregamento do resumo
+    // LaunchedEffect(Unit) {
+    //     viewModel.loadSummary()
+    // }
+    FinalEvaluationSummaryContent(navController, viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FinalEvaluationSummaryContent(navController: NavController) {
+fun FinalEvaluationSummaryContent(navController: NavController, viewModel: FinalEvaluationSummaryViewModel) {
     val scrollState = rememberScrollState()
-
-    // Mock data for demonstration purposes, replace with actual ViewModel data
-    val averageScore = "3.1" //
-    var managementDecisionForLocation by remember { mutableStateOf("A média de 3.1 indica qualidade estrutural razoável. Para maximizar a exploração do solo pelas raízes das culturas e para ajudar no desempenho de outras funções do solo, as mudanças no manejo devem ser a longo prazo e podem incluir a adoção de rotação de culturas com sistema radicular abundantes e/ou de penetração profunda.") } //
-    val totalSamples = 3 //  Example
-    val evaluatorName = "João Silva" // Example
-    val startDate = "24 setembro 2023" //  Example
-    val startTime = "15 horas" //  Example
-    val endDate = "24 setembro 2023" // Example (assuming same day for simple mock)
-    val endTime = "16:30" // Example
-    val evaluationDuration = "1h30min" //  Example (calculate based on start/end)
+    val uiState by viewModel.uiState.collectAsState() // Observe o estado do ViewModel
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Resumo da avaliação", // Título da TopAppBar
+                        text = "Resumo da avaliação",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -81,7 +77,6 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    // Botão de voltar (opcional na tela final, pode ir direto para histórico)
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -100,11 +95,11 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Título "Escore Qe-VESS médio do local X:"
                 Text(
@@ -112,12 +107,12 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
                     style = MaterialTheme.typography.headlineSmall,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Valor do escore médio (ex: 3.1)
+                // Valor do escore médio (do ViewModel)
                 Text(
-                    text = averageScore,
+                    text = uiState.averageScore,
                     style = MaterialTheme.typography.displayMedium,
                     color = LightColorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
@@ -131,12 +126,12 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
                     text = "Ball et al. (2017)",
                     style = MaterialTheme.typography.bodySmall,
                     color = LightColorScheme.onSurfaceVariant,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally) // Centraliza
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally)
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Decisão de manejo para o local
+                // Decisão de manejo para o local (do ViewModel)
                 Text(
                     text = "Decisão de manejo para o local:",
                     style = MaterialTheme.typography.titleMedium,
@@ -145,18 +140,18 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
                 OutlinedTextField(
-                    value = managementDecisionForLocation,
-                    onValueChange = { managementDecisionForLocation = it }, // Este campo é editável, conforme escopo 
+                    value = uiState.managementDecisionForLocation,
+                    onValueChange = { /* Este campo deve ser editável, conforme o escopo */ },
                     label = { Text("Descreva o manejo para o local...") },
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp), // Ajuste a altura conforme o conteúdo esperado
+                        .height(180.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Resumo do total de amostras, data/hora, tempo de avaliação
+                // Resumo do total de amostras, data/hora, tempo de avaliação (do ViewModel)
                 Text(
                     text = "Resumo da avaliação:",
                     style = MaterialTheme.typography.titleMedium,
@@ -171,32 +166,26 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Total de amostras: $totalSamples", 
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = LightColorScheme.onBackground
-                    )
-                    Text(
-                        text = "Avaliador: $evaluatorName",
+                        text = "Total de amostras: ${uiState.totalSamples}",
                         style = MaterialTheme.typography.bodyLarge,
                         color = LightColorScheme.onBackground
                     )
                     Text(
-                        text = "Início da avaliação: $startDate às $startTime", 
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = LightColorScheme.onBackground
+                        text = "Avaliador: ${uiState.evaluatorName}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = LightColorScheme.onBackground
                     )
                     Text(
-                        text = "Final da avaliação: $endDate às $endTime", 
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = LightColorScheme.onBackground
+                        text = "Data de Início: ${uiState.startDate} às ${uiState.startTime}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = LightColorScheme.onBackground
                     )
                     Text(
-                        text = "Duração da avaliação: $evaluationDuration", 
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = LightColorScheme.onBackground
+                        text = "Duração da avaliação: ${uiState.evaluationDuration}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = LightColorScheme.onBackground
                     )
                 }
-
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -205,9 +194,8 @@ fun FinalEvaluationSummaryContent(navController: NavController) {
                     onClick = {
                         // Lógica para salvar a avaliação completa e navegar para o histórico
                         println("SALVAR clicado!")
-                        println("Decisão de manejo para o local: $managementDecisionForLocation")
-                        // Navegar para a tela de histórico [cite: 41]
-                        navController.navigate(NavigationRoutes.MyEvaluations) // Supondo que esta é a rota para o histórico
+                        // TODO: Implementar a lógica de salvar os dados no repositório
+                        navController.navigate(NavigationRoutes.MyEvaluations) // Navega para o histórico
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)

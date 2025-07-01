@@ -1,7 +1,7 @@
 package org.example.project.presentation.screens.evaluate
 
+import LayerData
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,8 +21,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CameraAlt // For upload file button
-import androidx.compose.material.icons.filled.HelpOutline // For help/info icon
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,22 +35,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
+import org.example.project.presentation.shared.SharedEvaluationViewModel
+import org.example.project.utils.encodeUrl
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,29 +58,22 @@ fun EvaluateScreen (
     navController: NavController,
     viewModel: EvaluateViewModel = koinViewModel()
 ){
-    EvaluateContent(navController)
+    EvaluateContent(navController, viewModel) // Passe o ViewModel para o Content
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EvaluateContent(navController: NavController) {
+fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) { // Recebe o ViewModel
     val scrollState = rememberScrollState()
-
-    // Estados para os campos da avaliação
-    var sampleName by remember { mutableStateOf("Amostra 1") } // [cite: 47]
-    var numLayers by remember { mutableIntStateOf(1) } // [cite: 47] Default to 1 layer
-    var location by remember { mutableStateOf("") } // [cite: 48]
-    var evaluator by remember { mutableStateOf("") }
-    val layerLengths = remember { mutableStateListOf<String>().apply { add("") } } // Dynamic list for lengths [cite: 48]
-    val layerScores = remember { mutableStateListOf<String>().apply { add("") } } // Dynamic list for scores [cite: 48]
-    var otherImportantInfo by remember { mutableStateOf("") } //
+    val uiState by viewModel.uiState.collectAsState() // Observa o estado da UI do ViewModel
+    val sharedViewModel: SharedEvaluationViewModel = koinInject()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Avaliações", // Título da TopAppBar
+                        text = "Avaliações",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -91,7 +84,7 @@ fun EvaluateContent(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Usando ArrowBack padrão
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
                             tint = LightColorScheme.onPrimary
                         )
@@ -107,11 +100,11 @@ fun EvaluateContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Título "Avaliações" e nome da amostra
                 Row(
@@ -120,39 +113,37 @@ fun EvaluateContent(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Amostra Nº 01", //  Hardcoded as per screenshot
+                        text = uiState.sampleName, // Usa o estado do ViewModel
                         style = MaterialTheme.typography.headlineSmall,
                         color = LightColorScheme.onBackground,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable {
-                            // Logic to edit sample name
+                            // Lógica para editar o nome da amostra (ex: abrir um diálogo de edição)
                             println("Editar nome da amostra")
                         }
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // Help/info icon for VESS Scores
                         IconButton(onClick = {
-                            // Navigate to VESS Scores tutorial
-                            navController.navigate(NavigationRoutes.VessScores) //
+                            navController.navigate(NavigationRoutes.VessScores)
                         }) {
                             Icon(
-                                imageVector = Icons.Default.HelpOutline, //  Question mark icon
+                                imageVector = Icons.Default.HelpOutline,
                                 contentDescription = "Escores VESS",
                                 tint = LightColorScheme.primary
                             )
                         }
                         Text(
                             text = "Escores VESS",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = LightColorScheme.onBackground
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = LightColorScheme.onBackground
                         )
                     }
                 }
                 Text(
                     text = "Quantas camadas de solo deseja avaliar?",
-                style = MaterialTheme.typography.bodyLarge,
-                color = LightColorScheme.onBackground,
-                modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = LightColorScheme.onBackground,
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
                 // Seleção do número de camadas
@@ -161,22 +152,17 @@ fun EvaluateContent(navController: NavController) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Iterar de 1 a 5 para criar os botões de seleção de camadas
                     for (i in 1..5) {
                         Button(
-                            onClick = {
-                                numLayers = i
-                                // Adjust lists for layers
-                                while (layerLengths.size < numLayers) layerLengths.add("")
-                                while (layerScores.size < numLayers) layerScores.add("")
-                            },
+                            onClick = { viewModel.updateNumLayers(i) },
                             modifier = Modifier.size(56.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (numLayers == i) LightColorScheme.primary else LightColorScheme.secondary.copy(alpha = 0.5f),
-                                contentColor = if (numLayers == i) LightColorScheme.onPrimary else LightColorScheme.onSecondary
+                                // Use uiState.layers.size para verificar a camada selecionada
+                                containerColor = if (uiState.layers.size == i) LightColorScheme.primary else LightColorScheme.secondary,
+                                contentColor = if (uiState.layers.size == i) LightColorScheme.onPrimary else LightColorScheme.onSecondary
                             ),
                             shape = CircleShape,
-                            contentPadding = PaddingValues(0.dp) // Remove padding para texto preencher
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text(text = "$i", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                         }
@@ -185,17 +171,17 @@ fun EvaluateContent(navController: NavController) {
 
                 // Campos de entrada para Local/Propriedade e Avaliador
                 OutlinedTextField(
-                    value = location,
-                    onValueChange = { location = it },
-                    label = { Text("Local/propriedade (GPS)") }, //
+                    value = uiState.location,
+                    onValueChange = { viewModel.updateLocation(it) },
+                    label = { Text("Local/propriedade (GPS)") },
                     placeholder = { Text("Ex: Fazenda Boa Esperança (GPS)") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
-                    value = evaluator,
-                    onValueChange = { evaluator = it },
-                    label = { Text("Avaliador") }, //
+                    value = uiState.evaluator,
+                    onValueChange = { viewModel.updateEvaluator(it) },
+                    label = { Text("Avaliador") },
                     placeholder = { Text("Ex: João Silva") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -203,7 +189,7 @@ fun EvaluateContent(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Campos dinâmicos para Comprimento e Nota por camada
-                repeat(numLayers) { index ->
+                repeat(uiState.layers.size) { index ->
                     Text(
                         text = "Camada ${index + 1}:",
                         style = MaterialTheme.typography.titleMedium,
@@ -212,24 +198,16 @@ fun EvaluateContent(navController: NavController) {
                         modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                     )
                     OutlinedTextField(
-                        value = layerLengths[index],
-                        onValueChange = { newValue ->
-                            if (newValue.all { it.isDigit() || it == '.' }) { // Allow digits and dot for decimal values
-                                layerLengths[index] = newValue
-                            }
-                        },
-                        label = { Text("Comprimento camada ${index + 1} (cm)") }, //
+                        value = uiState.layers.getOrElse(index) { LayerData("", "") }.length,
+                        onValueChange = { viewModel.updateLayerLength(index, it) },
+                        label = { Text("Comprimento camada ${index + 1} (cm)") },
                         placeholder = { Text("Ex: 15") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = layerScores[index],
-                        onValueChange = { newValue ->
-                            if (newValue.all { it.isDigit() || it == '.' }) { // Allow digits and dot for decimal values
-                                layerScores[index] = newValue
-                            }
-                        },
-                        label = { Text("Nota camada ${index + 1} (Qe-VESS)") }, //
+                        value = uiState.layers.getOrElse(index) { LayerData("", "") }.score,
+                        onValueChange = { viewModel.updateLayerScore(index, it) },
+                        label = { Text("Nota camada ${index + 1} (Qe-VESS)") },
                         placeholder = { Text("Ex: 3.5") },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -240,10 +218,7 @@ fun EvaluateContent(navController: NavController) {
                 // Botão para upload de arquivo (imagem)
                 Button(
                     onClick = {
-                        // Lógica para abrir câmera/galeria para upload
                         println("Clicado em Upload de arquivo")
-                        // Utilize CameraManager/GalleryManager do core-camera-gallery
-                        // Ex: cameraManager.launch() ou galleryManager.launch()
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.6f)
@@ -256,13 +231,13 @@ fun EvaluateContent(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.CameraAlt, // Ícone de câmera para upload [cite: 128]
+                            imageVector = Icons.Default.CameraAlt,
                             contentDescription = "Upload de arquivo",
                             tint = LightColorScheme.onSecondary
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Upload de arquivo", //
+                            text = "Upload de arquivo",
                             color = LightColorScheme.onSecondary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
@@ -272,48 +247,38 @@ fun EvaluateContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Outras informações importantes [cite: 49, 128, 129]
+                // Outras informações importantes
                 OutlinedTextField(
-                    value = otherImportantInfo,
-                    onValueChange = { otherImportantInfo = it },
-                    label = { Text("Outras informações importantes") }, //
-                    placeholder = { Text("Ex: Amostra muito úmida, raízes achatadas...") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp), // Aumente a altura para mais texto
-                    maxLines = 5
-                )
-
-                // Sugestões para outras informações importantes
-                Text(
-                    text = "Sugestões que contribuam para a construção de um histórico de avaliação da propriedade ou do grau de dificuldade de avaliação: \n" +
+                    value = uiState.otherImportantInfo,
+                    onValueChange = { viewModel.updateOtherImportantInfo(it) },
+                    label = { Text("Outras informações importantes") },
+                    placeholder = { Text("Sugestões que contribuam para a construção de um histórico de avaliação da propriedade ou do grau de dificuldade de avaliação: \n" +
                             "amostra muito úmida/ amostra muito seca\n" +
                             "foi muito difícil cavar a trincheira/extrair a amostra do perfil do solo\n" +
                             "raízes estavam achatadas/tortuosas\n" +
                             "avaliação realizada em pré-plantio/pós-colheita da cultura x, no mês x, ano x\n" +
-                            "tipo de solo (argiloso/arenoso/..)",
-                style = MaterialTheme.typography.bodySmall,
-                color = LightColorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth()
+                            "tipo de solo (argiloso/arenoso/..)") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    maxLines = 5
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botão "AVALIAR"
                 Button(
                     onClick = {
-                        // Lógica para processar a avaliação e navegar para a tela de resultados
-                        println("Avaliar clicado!")
-                        println("Nome da Amostra: $sampleName")
-                        println("Número de Camadas: $numLayers")
-                        println("Local: $location")
-                        println("Avaliador: $evaluator")
-                        layerLengths.forEachIndexed { index, length ->
-                            println("Camada ${index + 1} - Comprimento: $length cm, Nota: ${layerScores[index]}")
-                        }
-                        println("Outras informações: $otherImportantInfo")
+                        // 1. Calcule o escore médio
+                        val averageScore = viewModel.calculateAverageScore()
 
-                        navController.navigate(NavigationRoutes.EvaluationResult) // Rota para a tela de resultado da avaliação
+                        // 2. Obtenha os dados completos da avaliação
+                        val evaluationData = viewModel.uiState.value
+
+                        // 3. Salve os dados no ViewModel compartilhado
+                        sharedViewModel.lastEvaluationData = evaluationData
+
+                        // 4. Navegue para a tela de resultados, passando apenas o escore na rota
+                        navController.navigate("${NavigationRoutes.EvaluationResult}/${averageScore}")
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
@@ -323,9 +288,9 @@ fun EvaluateContent(navController: NavController) {
                 ) {
                     Text(
                         text = "AVALIAR",
-                    color = LightColorScheme.onPrimary,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                        color = LightColorScheme.onPrimary,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
 

@@ -18,13 +18,14 @@ import org.example.project.presentation.screens.vessScores.VessScoresViewModel
 import org.example.project.presentation.screens.whatIsVESS.WhatIsVESSViewModel
 import org.example.project.presentation.screens.whenToSample.WhenToSampleViewModel
 import org.example.project.presentation.screens.whereToSample.WhereToSampleViewModel
+import org.example.project.presentation.shared.SharedEvaluationViewModel // Importe o novo ViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        HomeViewModel(get()) // Injetar ConfigurationRepository no HomeViewModel
+        HomeViewModel(get())
     }
     viewModel {
         ConfigurationViewModel(get())
@@ -63,7 +64,7 @@ val viewModelModule = module {
         EvaluateViewModel()
     }
     viewModel {
-        FinalEvaluationSummaryViewModel()
+        FinalEvaluationSummaryViewModel(get())
     }
     viewModel {
         EvaluationResultViewModel()
@@ -71,6 +72,9 @@ val viewModelModule = module {
     viewModel {
         TermsAndConditionsViewModel()
     }
+
+    // Adicione a definição do ViewModel Compartilhado como um singleton
+    single { SharedEvaluationViewModel() }
 }
 
 val appModules = listOf<Module>(
