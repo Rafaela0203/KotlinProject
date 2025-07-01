@@ -20,6 +20,7 @@ import org.example.project.presentation.screens.finalEvaluationSummary.FinalEval
 
 import org.example.project.presentation.screens.home.HomeScreen
 import org.example.project.presentation.screens.managementDecision.ManagementDecisionScreen
+import org.example.project.presentation.screens.myEvaluations.MyEvaluationsScreen
 import org.example.project.presentation.screens.sampleExtraction.SampleExtractionScreen
 import org.example.project.presentation.screens.sampleFragmentation.SampleFragmentationScreen
 import org.example.project.presentation.screens.termsAndConditions.TermsAndConditionsScreen
@@ -97,9 +98,9 @@ fun App() {
                 composable(NavigationRoutes.WhatIsVESS) {
                     WhatIsVESSScreen(navController)
                 }
-//                composable(NavigationRoutes.MyEvaluations) {
-//                    MyEvaluationsScreen(navController)
-//                }
+                composable(NavigationRoutes.MyEvaluations) {
+                    MyEvaluationsScreen(navController)
+                }
                 composable(NavigationRoutes.AboutApp) {
                     AboutAppScreen(navController)
                 }

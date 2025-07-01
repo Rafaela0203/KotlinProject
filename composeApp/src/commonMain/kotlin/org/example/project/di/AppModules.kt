@@ -11,6 +11,7 @@ import org.example.project.presentation.screens.evaluationResult.EvaluationResul
 import org.example.project.presentation.screens.finalEvaluationSummary.FinalEvaluationSummaryViewModel
 import org.example.project.presentation.screens.home.HomeViewModel
 import org.example.project.presentation.screens.managementDecision.ManagementDecisionViewModel
+import org.example.project.presentation.screens.myEvaluations.MyEvaluationsViewModel
 import org.example.project.presentation.screens.sampleExtraction.SampleExtractionViewModel
 import org.example.project.presentation.screens.sampleFragmentation.SampleFragmentationViewModel
 import org.example.project.presentation.screens.termsAndConditions.TermsAndConditionsViewModel
@@ -71,6 +72,9 @@ val viewModelModule = module {
     }
     viewModel {
         TermsAndConditionsViewModel()
+    }
+    viewModel {
+        MyEvaluationsViewModel(get()) // Adicione esta linha
     }
 
     // Adicione a definição do ViewModel Compartilhado como um singleton
