@@ -3,35 +3,51 @@ package org.example.project.presentation.screens.evaluate
 import EvaluationData
 import LayerData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import org.example.project.presentation.shared.SharedEvaluationViewModel
 
-class EvaluateViewModel : ViewModel() {
+class EvaluateViewModel(
+    private val sharedViewModel: SharedEvaluationViewModel
+) : ViewModel() {
 
     // 1. Defina o estado da avaliação usando um StateFlow
     private val _uiState = MutableStateFlow(
         EvaluationData(
-            sampleName = "Amostra Nº 01",
+            // Defina o nome da amostra com base no contador, que será atualizado no init
+            sampleName = "Amostra Nº ${sharedViewModel.currentSampleIndex.value}",
             location = "",
             evaluator = "",
-            layers = listOf(LayerData(length = "", score = "")), // Inicializa com uma camada padrão
+            layers = listOf(LayerData(length = "", score = "")),
             otherImportantInfo = ""
         )
     )
     val uiState: StateFlow<EvaluationData> = _uiState.asStateFlow()
 
+    init {
+        // Colete o valor do contador de amostras e atualize o nome da amostra sempre que ele mudar
+        viewModelScope.launch {
+            sharedViewModel.currentSampleIndex.collect { index ->
+                _uiState.value = _uiState.value.copy(sampleName = "Amostra Nº $index")
+            }
+        }
+    }
     // 2. Crie funções para atualizar cada parte do estado
     fun updateNumLayers(num: Int) {
-        // Atualiza a lista de camadas para corresponder ao número selecionado
         val currentLayers = _uiState.value.layers.toMutableList()
         if (num > currentLayers.size) {
+            // Aumenta o número de camadas, adicionando novas
             while (currentLayers.size < num) {
                 currentLayers.add(LayerData(length = "", score = ""))
             }
         } else if (num < currentLayers.size) {
+            // Diminui o número de camadas, removendo do final
             while (currentLayers.size > num) {
-                currentLayers.removeLast()
+                // Use removeAt() em vez de removeLast() para garantir a compatibilidade
+                currentLayers.removeAt(currentLayers.lastIndex)
             }
         }
         _uiState.value = _uiState.value.copy(layers = currentLayers)

@@ -1,6 +1,5 @@
 package org.example.project.presentation.screens.evaluate
 
-import LayerData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +36,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -48,10 +50,11 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
-import org.example.project.presentation.shared.SharedEvaluationViewModel
 import org.example.project.utils.encodeUrl
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import LayerData
+import org.example.project.presentation.shared.SharedEvaluationViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun EvaluateScreen (
@@ -66,6 +69,7 @@ fun EvaluateScreen (
 fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) { // Recebe o ViewModel
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState() // Observa o estado da UI do ViewModel
+    var isEditingName by remember { mutableStateOf(false) } // Adicione um estado para controlar a edição
     val sharedViewModel: SharedEvaluationViewModel = koinInject()
 
     Scaffold(
@@ -112,16 +116,28 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = uiState.sampleName, // Usa o estado do ViewModel
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = LightColorScheme.onBackground,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.clickable {
-                            // Lógica para editar o nome da amostra (ex: abrir um diálogo de edição)
-                            println("Editar nome da amostra")
+                    if (isEditingName) {
+                        OutlinedTextField(
+                            value = uiState.sampleName,
+                            onValueChange = { viewModel.updateSampleName(it) }, // Atualiza o nome no ViewModel
+                            label = { Text("Nome da Amostra") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(onClick = { isEditingName = false }) { // Botão para finalizar a edição
+                            Text("OK")
                         }
-                    )
+                    } else {
+                        Text(
+                            text = uiState.sampleName, // Usa o estado do ViewModel
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = LightColorScheme.onBackground,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                isEditingName = true // Altera o estado para editar
+                            }
+                        )
+                    }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(onClick = {
                             navController.navigate(NavigationRoutes.VessScores)
@@ -274,10 +290,13 @@ fun EvaluateContent(navController: NavController, viewModel: EvaluateViewModel) 
                         // 2. Obtenha os dados completos da avaliação
                         val evaluationData = viewModel.uiState.value
 
-                        // 3. Salve os dados no ViewModel compartilhado
-                        sharedViewModel.lastEvaluationData = evaluationData
+                        // Adicione este log para verificar se evaluationData está completo antes de navegar
+                        println("Dados da avaliação a serem salvos: $evaluationData")
 
-                        // 4. Navegue para a tela de resultados, passando apenas o escore na rota
+                        // 3. Salve o objeto de dados completo no ViewModel compartilhado
+                        sharedViewModel.currentEvaluation = evaluationData
+
+                        // 4. Navegue para a tela de resultados, passando apenas o escore
                         navController.navigate("${NavigationRoutes.EvaluationResult}/${averageScore}")
                     },
                     modifier = Modifier

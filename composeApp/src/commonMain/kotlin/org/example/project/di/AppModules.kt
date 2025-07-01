@@ -62,7 +62,7 @@ val viewModelModule = module {
         AboutAppViewModel()
     }
     viewModel {
-        EvaluateViewModel()
+        EvaluateViewModel(get())
     }
     viewModel {
         FinalEvaluationSummaryViewModel(get())

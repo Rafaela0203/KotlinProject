@@ -59,13 +59,14 @@ import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.lifecycle.viewModelScope
+import org.example.project.presentation.shared.SharedEvaluationViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen (
     navController: NavController,
     viewModel: HomeViewModel = koinViewModel()
 ){
-    // Passar o ViewModel para HomeContent
     HomeContent(navController = navController, viewModel = viewModel)
 }
 
@@ -73,7 +74,7 @@ fun HomeScreen (
 @Composable
 fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Receber o ViewModel aqui
     val scrollState = rememberScrollState()
-
+    val sharedViewModel: SharedEvaluationViewModel = koinInject()
     val navigateToConfiguration by viewModel.navigateToConfiguration.collectAsState()
 
     if (navigateToConfiguration) {
@@ -113,11 +114,10 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) { // Rec
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
-                    // Chamar a função do ViewModel para verificar e navegar
                     onClick = {
-                        // Use coroutineScope para lançar a suspensão da função
                         viewModel.viewModelScope.launch {
                             viewModel.checkConfigurationAndNavigate {
+                                sharedViewModel.resetSampleIndex()
                                 navController.navigate(NavigationRoutes.Evaluate)
                             }
                         }

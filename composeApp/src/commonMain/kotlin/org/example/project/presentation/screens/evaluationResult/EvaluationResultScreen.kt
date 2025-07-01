@@ -44,32 +44,41 @@ import org.example.project.presentation.shared.SharedEvaluationViewModel // Impo
 import org.koin.compose.koinInject
 
 @Composable
-fun EvaluationResultScreen (
+fun EvaluationResultScreen(
     navController: NavController,
-    score: Float? = null,
+    score: Float?,
     viewModel: EvaluationResultViewModel = koinViewModel(),
-    sharedViewModel: SharedEvaluationViewModel = koinInject() // Injete o ViewModel compartilhado aqui
-){
-    LaunchedEffect(key1 = score) {
-        if (score != null) {
-            // Notifique o ViewModel com o escore e os dados completos
-            viewModel.loadEvaluationResult(score, sharedViewModel.lastEvaluationData)
-        }
-    }
-
-    // Corrija a chamada: passe sharedViewModel como parâmetro
-    EvaluationResultContent(navController, viewModel, sharedViewModel)
+    sharedViewModel: SharedEvaluationViewModel = koinInject() // Injetar o sharedViewModel
+) {
+    EvaluationResultContent(navController, score, viewModel, sharedViewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EvaluationResultContent(
     navController: NavController,
+    score: Float?,
     viewModel: EvaluationResultViewModel,
-    sharedViewModel: SharedEvaluationViewModel // Adicione este parâmetro
+    sharedViewModel: SharedEvaluationViewModel
 ) {
     val scrollState = rememberScrollState()
-    val uiState by viewModel.uiState.collectAsState() // Observe o estado do ViewModel
+    val uiState by viewModel.uiState.collectAsState()
+
+    // Use LaunchedEffect para carregar os dados uma vez que a tela é composta
+    LaunchedEffect(key1 = Unit) {
+        println("LaunchedEffect na tela de resultados foi ativado.")
+        val evaluationData = sharedViewModel.currentEvaluation
+        println("Dados recuperados do sharedViewModel: $evaluationData")
+        if (score != null && evaluationData != null) {
+            viewModel.loadEvaluationResult(score, evaluationData)
+        } else {
+            // Caso os dados não sejam encontrados, exiba uma mensagem de erro
+            viewModel.loadEvaluationResult(
+                0f,
+                null
+            )
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -231,9 +240,10 @@ fun EvaluationResultContent(
 
                     Button(
                         onClick = {
-                            // Use o '?.let' para garantir que evaluationData não é nulo antes de adicionar
                             uiState.evaluationData?.let {
                                 sharedViewModel.addEvaluation(it)
+                                // Incremente o contador para a próxima amostra
+                                sharedViewModel.incrementSampleIndex()
                                 println("PRÓXIMA AMOSTRA clicado! Amostra adicionada e voltando para a avaliação.")
                                 navController.navigate(NavigationRoutes.Evaluate) {
                                     popUpTo(NavigationRoutes.Evaluate) { inclusive = true }
