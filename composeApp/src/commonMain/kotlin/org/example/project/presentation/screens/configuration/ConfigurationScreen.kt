@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +29,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +56,7 @@ fun ConfigurationScreen (
 fun ConfigurationContent(navController: NavController, viewModel: ConfigurationViewModel) { // Recebe o ViewModel
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState() // Observa o estado do ViewModel
+    var termsAccepted by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -135,14 +140,34 @@ fun ConfigurationContent(navController: NavController, viewModel: ConfigurationV
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = termsAccepted,
+                    onCheckedChange = { termsAccepted = it }
+                )
+                Text(
+                    text = "Li e aceito os Termos e condições de uso",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.clickable { termsAccepted = !termsAccepted }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Button(
                 onClick = {
                     viewModel.saveConfiguration {
                         navController.navigate(NavigationRoutes.Evaluate) {
-                            popUpTo(NavigationRoutes.Home) { inclusive = false } // Opcional: Manter a Home no backstack
+                            popUpTo(NavigationRoutes.Home) { inclusive = false }
                         }
                     }
                 },
+                enabled = termsAccepted,
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(56.dp),
@@ -157,10 +182,10 @@ fun ConfigurationContent(navController: NavController, viewModel: ConfigurationV
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Termos e condições de uso",
+                text = "Ler os Termos e condições de uso",
                 color = LightColorScheme.primary,
                 fontSize = 16.sp,
                 modifier = Modifier.clickable {

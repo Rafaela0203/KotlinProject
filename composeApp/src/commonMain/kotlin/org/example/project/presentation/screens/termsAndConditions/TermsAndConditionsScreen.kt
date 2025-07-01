@@ -198,31 +198,6 @@ fun TermsAndConditionsContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Li e concordo com os termos e condições de uso do aplicativo.
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start // Alinha à esquerda
-                ) {
-                    Checkbox(
-                        checked = agreedToTerms,
-                        onCheckedChange = { agreedToTerms = it },
-                        colors = androidx.compose.material3.CheckboxDefaults.colors(
-                            checkedColor = LightColorScheme.primary,
-                            uncheckedColor = LightColorScheme.onBackground.copy(alpha = 0.6f)
-                        )
-                    )
-                    Text(
-                        text = "Li e concordo com os termos e condições de uso do aplicativo.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = LightColorScheme.onBackground,
-                        modifier = Modifier.clickable { agreedToTerms = !agreedToTerms } // Faz o texto também clicável
-                    )
-                }
-
-
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Botão de navegação "Voltar"
