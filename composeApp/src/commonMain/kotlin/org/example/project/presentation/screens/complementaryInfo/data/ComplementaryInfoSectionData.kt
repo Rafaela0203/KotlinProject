@@ -1,13 +1,23 @@
 package org.example.project.presentation.screens.complementaryInfo.data
 
-// Data class to hold content for each complementary info section
+import kotlinproject.composeapp.generated.resources.IC_01
+import kotlinproject.composeapp.generated.resources.IC_02
+import kotlinproject.composeapp.generated.resources.IC_03
+import kotlinproject.composeapp.generated.resources.IC_04
+import kotlinproject.composeapp.generated.resources.IC_05
+import kotlinproject.composeapp.generated.resources.IC_06
+import kotlinproject.composeapp.generated.resources.IC_07
+import kotlinproject.composeapp.generated.resources.IC_08
+import kotlinproject.composeapp.generated.resources.IC_09
+import kotlinproject.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.DrawableResource
+
 data class ComplementaryInfoSectionData(
     val title: String,
-    val description: String? = null, // Some sections might only have a title and image
-    val imageUrl: String? = null // Optional image URL or resource path
+    val description: String? = null,
+    val imageRes: DrawableResource? = null
 )
 
-// Define the content for each section based on your screenshots
 val complementaryInfoData = listOf(
     ComplementaryInfoSectionData(
         title = "A nota da qualidade estrutural do solo pode ser atribuída entre categorias se a camada apresentar características das duas.",
@@ -18,38 +28,39 @@ val complementaryInfoData = listOf(
     ),
     ComplementaryInfoSectionData(
         title = "Amostras solo argiloso com escore Qe-VESS: 1,0 e 2,5",
-        imageUrl = "url_to_image_ead03b.jpg" // Placeholder URL for image_ead03b.jpg
+        imageRes = Res.drawable.IC_01
     ),
     ComplementaryInfoSectionData(
         title = "Amostras solo argiloso com escore Qe-VESS: 1,5 e 3,5",
-        imageUrl = "url_to_image_ead016.jpg" // Placeholder URL for image_ead016.jpg
+        imageRes = Res.drawable.IC_02
+
     ),
     ComplementaryInfoSectionData(
         title = "Amostras solo argiloso com escore Qe-VESS: 1,5 e 4,0",
-        imageUrl = "url_to_image_eacfdd.jpg" // Placeholder URL for image_eacfdd.jpg
+        imageRes = Res.drawable.IC_03
     ),
     ComplementaryInfoSectionData(
         title = "Amostras solo argiloso com escore Qe-VESS 4,5",
-        imageUrl = "url_to_image_eacfb9.jpg" // Placeholder URL for image_eacfb9.jpg
+        imageRes = Res.drawable.IC_04
     ),
     ComplementaryInfoSectionData(
         title = "Amostras solo arenoso com escore Qe-VESS 4,5",
-        imageUrl = "url_to_image_eacf3d.jpg" // Placeholder URL for image_eacf3d.jpg
+        imageRes = Res.drawable.IC_05
     ),
     ComplementaryInfoSectionData(
         title = "Amostra solo argiloso com escores Qe-VESS 5,0",
-        imageUrl = "url_to_image_eacc78.jpg" // Placeholder URL for image_eacc78.jpg
+        imageRes = Res.drawable.IC_06
     ),
     ComplementaryInfoSectionData(
         title = "Amostra solo argiloso com escores Qe-VESS 5,0",
-        imageUrl = "url_to_image_eacc78.jpg" // Placeholder URL for image_eacc78.jpg
+        imageRes = Res.drawable.IC_07
     ),
     ComplementaryInfoSectionData(
         title = "Amostra solo arenoso com escores Qe-VESS 5,0",
-        imageUrl = "url_to_image_eacc58.jpg" // Placeholder URL for image_eacc58.jpg
+        imageRes = Res.drawable.IC_08
     ),
     ComplementaryInfoSectionData(
         title = "Amostra solo arenoso com escores Qe-VESS 5,0",
-        imageUrl = "url_to_image_eacc78.jpg" // Placeholder URL for image_eacc78.jpg
+        imageRes = Res.drawable.IC_09
     )
 )

@@ -1,5 +1,6 @@
 package org.example.project.presentation.screens.complementaryInfo
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,7 +28,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,10 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.example.project.LightColorScheme
 import org.example.project.presentation.screens.complementaryInfo.data.complementaryInfoData
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-
-// Assume `WebImage` is available from your core-shared-ui module as in Netflix-CMP
-// import com.codandotv.streamplayerapp.core_shared_ui.widget.WebImage
 
 @Composable
 fun ComplementaryInfoScreen (
@@ -86,13 +84,12 @@ fun ComplementaryInfoContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Iterar sobre os dados para criar as seções
                 complementaryInfoData.forEach { section ->
                     Column(
                         modifier = Modifier
@@ -102,7 +99,7 @@ fun ComplementaryInfoContent(navController: NavController) {
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Título da seção
+
                         Text(
                             text = section.title,
                             style = MaterialTheme.typography.titleMedium,
@@ -110,7 +107,6 @@ fun ComplementaryInfoContent(navController: NavController) {
                             fontWeight = FontWeight.Bold
                         )
 
-                        // Descrição (se houver)
                         section.description?.let { desc ->
                             Text(
                                 text = desc,
@@ -120,39 +116,23 @@ fun ComplementaryInfoContent(navController: NavController) {
                             )
                         }
 
-                        // Imagem (se houver)
-                        section.imageUrl?.let { imageUrl ->
-                            Spacer(modifier = Modifier.height(8.dp))
-                            // Usar WebImage se estiver disponível, caso contrário, um placeholder Box
-                            // Exemplo com WebImage (requer importação de com.codandotv.streamplayerapp.core_shared_ui.widget.WebImage)
-                            // WebImage(
-                            //     imageUrl = imageUrl,
-                            //     contentDescription = section.title,
-                            //     contentScale = ContentScale.Fit,
-                            //     modifier = Modifier
-                            //         .fillMaxWidth()
-                            //         .height(200.dp)
-                            // )
-                            // Placeholder se WebImage não for importado ou para recursos locais
-                            Column(
+                        section.imageRes?.let { res ->
+                            Spacer(Modifier.height(8.dp))
+
+                            Image(
+                                painter = painterResource(res),
+                                contentDescription = section.title,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(200.dp)
-                                    .background(LightColorScheme.surfaceVariant.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "[IMAGEM AQUI]",
-                                    color = LightColorScheme.onSurfaceVariant
-                                )
-                            }
+                                    .height(200.dp),
+                                contentScale = ContentScale.Fit
+                            )
                         }
+
                     }
-                    Spacer(modifier = Modifier.height(16.dp)) // Espaço entre as seções
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                // Importante: Nota sobre a atribuição tátil
                 Text(
                     text = "*Ressaltamos que a atribuição da nota não foi realizada somente de forma visual mas tátil também.",
                     style = MaterialTheme.typography.bodySmall,
@@ -162,16 +142,16 @@ fun ComplementaryInfoContent(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botão de navegação "Voltar"
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center, // Centralize o botão
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { navController.popBackStack() }, // Volta para a tela anterior
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier
-                            .fillMaxWidth(0.6f) // Adapta a largura
+                            .fillMaxWidth(0.6f)
                             .height(56.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = LightColorScheme.primary),
                         shape = RoundedCornerShape(12.dp)
@@ -184,7 +164,7 @@ fun ComplementaryInfoContent(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp)) // Espaço final para o scroll
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     )

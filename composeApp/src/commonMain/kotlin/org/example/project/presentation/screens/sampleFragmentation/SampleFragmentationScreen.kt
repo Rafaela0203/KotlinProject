@@ -1,5 +1,6 @@
 package org.example.project.presentation.screens.sampleFragmentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,20 +29,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.fragmentation
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-
-// You might need to import painterResource if using a local drawable
-// import org.jetbrains.compose.resources.painterResource
-// And your generated resources if using KMP resource system
-// import streamplayerapp_kmp.composeapp.generated.resources.Res
-// import streamplayerapp_kmp.composeapp.generated.resources.example_image // Replace with your actual image resource name
 
 @Composable
 fun SampleFragmentationScreen (
@@ -88,13 +87,12 @@ fun SampleFragmentationContent(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "Fragmentação da amostra" no conteúdo
                 Text(
                     text = "Fragmentação da amostra",
                     style = MaterialTheme.typography.headlineMedium,
@@ -103,7 +101,6 @@ fun SampleFragmentationContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
                 )
 
-                // Descrição da fragmentação da amostra
                 Text(
                     text = "Delicadamente manipule a amostra. Segure a amostra por baixo e abra como um livro. Observe se há camadas que se diferenciam pelo tamanho de agregados e faça a avaliação individual dessas camadas. Meça o comprimento de cada camada distinta.",
                     style = MaterialTheme.typography.bodyLarge,
@@ -111,28 +108,19 @@ fun SampleFragmentationContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espaço antes da imagem
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Placeholder para a imagem da fragmentação da amostra
-                // Você precisará adicionar a imagem como um recurso ao seu projeto Multiplatform.
-                // Ex: Image(painter = painterResource(Res.drawable.sample_fragmentation_image), ...)
-                Column(
+                Image(
+                    painter = painterResource(Res.drawable.fragmentation),
+                    contentDescription = "Equipamentos: pá e trena",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp) // Altura para a imagem
-                        .background(LightColorScheme.surface, RoundedCornerShape(8.dp)), // Cor de fundo para o placeholder
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "[IMAGEM DA FRAGMENTAÇÃO DA AMOSTRA AQUI]",
-                        color = LightColorScheme.onSurfaceVariant
-                    )
-                }
+                        .height(200.dp),
+                    contentScale = ContentScale.Fit
+                )
 
-                Spacer(modifier = Modifier.height(32.dp)) // Espaço antes dos botões
+                Spacer(modifier = Modifier.height(32.dp))
 
-                // Botões de navegação "Voltar" e "Próximo"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -157,9 +145,8 @@ fun SampleFragmentationContent(navController: NavController) {
 
                     Button(
                         onClick = {
-                            // Lógica para navegar para a próxima tela de tutorial/passo
                             println("Clicado em Próximo na tela Fragmentação da Amostra")
-                            navController.navigate(NavigationRoutes.VessScores) // Exemplo: para a tela de Atribuição dos escores VESS
+                            navController.navigate(NavigationRoutes.VessScores)
                         },
                         modifier = Modifier
                             .weight(1f)

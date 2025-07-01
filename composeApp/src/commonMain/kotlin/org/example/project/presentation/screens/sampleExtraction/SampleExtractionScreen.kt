@@ -1,5 +1,6 @@
 package org.example.project.presentation.screens.sampleExtraction
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,20 +29,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.swapslice
 import org.example.project.LightColorScheme
 import org.example.project.NavigationRoutes
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-
-// You might need to import painterResource if using a local drawable
-// import org.jetbrains.compose.resources.painterResource
-// And your generated resources if using KMP resource system
-// import streamplayerapp_kmp.composeapp.generated.resources.Res
-// import streamplayerapp_kmp.composeapp.generated.resources.example_image // Replace with your actual image resource name
 
 @Composable
 fun SampleExtractionScreen (
@@ -94,7 +93,7 @@ fun SampleExtractionContent(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
             ) {
-                // Título "Extração da amostra" no conteúdo
+
                 Text(
                     text = "Extração da amostra",
                     style = MaterialTheme.typography.headlineMedium,
@@ -103,7 +102,6 @@ fun SampleExtractionContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
                 )
 
-                // Descrição da extração da amostra
                 Text(
                     text = "Abra uma pequena trincheira cavando somente em lados opostos, reservando dois lados para a retirada da amostra de solo (VER ANIMAÇÃO). Retire uma amostra de 10 a 15 cm de espessura, 20 cm de largura e aprox. 25 cm de profundidade. Acomode a amostra no chão. Meça o comprimento (profundidade) da amostra. (É possível retirar menores profundidades, mas evite amostrar profundidades maiores que 25 cm, para isso utilize o SubVESS (Ball et al., 2015)).",
                     style = MaterialTheme.typography.bodyLarge,
@@ -111,28 +109,18 @@ fun SampleExtractionContent(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espaço antes da imagem
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Imagem do equipamento
-                // NOTE: Você precisaria adicionar a imagem como um recurso ao seu projeto Multiplatform.
-                // Por exemplo, em 'composeApp/src/commonMain/composeResources/drawable/sample_extraction_image.xml'
-                // ou usar uma URL com WebImage (se você tiver um serviço para isso).
-                // Como não tenho o recurso da imagem, vou simular com um Box e texto.
-                Column(
+                Image(
+                    painter = painterResource(Res.drawable.swapslice),
+                    contentDescription = "Equipamentos: pá e trena",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp) // Altura para a imagem
-                        .background(LightColorScheme.surface, RoundedCornerShape(8.dp)), // Cor de fundo para o placeholder
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "[IMAGEM DA EXTRAÇÃO DA AMOSTRA AQUI]",
-                        color = LightColorScheme.onSurfaceVariant
-                    )
-                }
+                        .height(200.dp),
+                    contentScale = ContentScale.Fit
+                )
 
-                Spacer(modifier = Modifier.height(32.dp)) // Espaço antes dos botões
+                Spacer(modifier = Modifier.height(32.dp))
 
                 // Botões de navegação "Voltar" e "Próximo"
                 Row(
