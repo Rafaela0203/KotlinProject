@@ -216,10 +216,10 @@ fun EvaluationResultContent(
                 ) {
                     Button(
                         onClick = {
-                            // Use o '?.let' para garantir que evaluationData não é nulo antes de adicionar
                             uiState.evaluationData?.let {
                                 sharedViewModel.addEvaluation(it)
-                                println("FINALIZAR clicado! Amostra adicionada à lista compartilhada.")
+                                sharedViewModel.endEvaluationSession()
+                                println("FINALIZAR clicado! Sessão finalizada.")
                                 navController.navigate(NavigationRoutes.FinalEvaluationSummary)
                             }
                         },
@@ -242,9 +242,11 @@ fun EvaluationResultContent(
                         onClick = {
                             uiState.evaluationData?.let {
                                 sharedViewModel.addEvaluation(it)
-                                sharedViewModel.endEvaluationSession()
-                                println("FINALIZAR clicado! Sessão finalizada.")
-                                navController.navigate(NavigationRoutes.FinalEvaluationSummary)
+                                sharedViewModel.incrementSampleIndex()
+                                println("PRÓXIMA AMOSTRA clicado! Amostra adicionada e voltando para a avaliação.")
+                                navController.navigate(NavigationRoutes.Evaluate) {
+                                    popUpTo(NavigationRoutes.Evaluate) { inclusive = true }
+                                }
                             }
                         },
                         modifier = Modifier
