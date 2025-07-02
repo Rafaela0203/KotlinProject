@@ -92,7 +92,7 @@ fun FinalEvaluationSummaryContent(navController: NavController, viewModel: Final
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Escore Qe-VESS médio do local X:",
+                    text = "Escore Qe-VESS médio do local:",
                     style = MaterialTheme.typography.headlineSmall,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,

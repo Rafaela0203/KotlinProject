@@ -40,7 +40,7 @@ import org.example.project.NavigationRoutes
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import org.example.project.presentation.shared.SharedEvaluationViewModel // Importe o ViewModel compartilhado
+import org.example.project.presentation.shared.SharedEvaluationViewModel
 import org.koin.compose.koinInject
 
 @Composable
@@ -48,7 +48,7 @@ fun EvaluationResultScreen(
     navController: NavController,
     score: Float?,
     viewModel: EvaluationResultViewModel = koinViewModel(),
-    sharedViewModel: SharedEvaluationViewModel = koinInject() // Injetar o sharedViewModel
+    sharedViewModel: SharedEvaluationViewModel = koinInject()
 ) {
     EvaluationResultContent(navController, score, viewModel, sharedViewModel)
 }
@@ -63,8 +63,8 @@ fun EvaluationResultContent(
 ) {
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
+    val sampleIndex by sharedViewModel.currentSampleIndex.collectAsState()
 
-    // Use LaunchedEffect para carregar os dados uma vez que a tela é composta
     LaunchedEffect(key1 = Unit) {
         println("LaunchedEffect na tela de resultados foi ativado.")
         val evaluationData = sharedViewModel.currentEvaluation
@@ -72,7 +72,6 @@ fun EvaluationResultContent(
         if (score != null && evaluationData != null) {
             viewModel.loadEvaluationResult(score, evaluationData)
         } else {
-            // Caso os dados não sejam encontrados, exiba uma mensagem de erro
             viewModel.loadEvaluationResult(
                 0f,
                 null
@@ -85,7 +84,7 @@ fun EvaluationResultContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Avaliações", // Título da TopAppBar
+                        text = "Avaliações",
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = LightColorScheme.onPrimary,
@@ -112,22 +111,20 @@ fun EvaluationResultContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 16.dp, vertical = 16.dp) // Padding lateral e vertical para o conteúdo
-                    .verticalScroll(scrollState), // Adiciona scroll se o conteúdo exceder a tela
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os elementos
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Título "Escore Qe-VESS da amostra X:"
                 Text(
-                    text = "Escore Qe-VESS da amostra X:",
+                    text = "Escore Qe-VESS da amostra ${sampleIndex}:",
                     style = MaterialTheme.typography.headlineSmall,
                     color = LightColorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start) // Alinha o texto à esquerda
+                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
                 )
 
-                // Valor do escore, agora vindo do ViewModel
                 Text(
                     text = uiState.sampleScore,
                     style = MaterialTheme.typography.displayMedium,
@@ -138,7 +135,7 @@ fun EvaluationResultContent(
                         .padding(horizontal = 24.dp, vertical = 12.dp)
                 )
 
-                // Fonte da informação
+
                 Text(
                     text = "Ball et al. (2017)",
                     style = MaterialTheme.typography.bodySmall,
@@ -148,7 +145,7 @@ fun EvaluationResultContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Decisão de manejo, vindo do ViewModel
+
                 Text(
                     text = "Decisão de manejo:",
                     style = MaterialTheme.typography.titleMedium,
@@ -158,17 +155,16 @@ fun EvaluationResultContent(
                 )
                 OutlinedTextField(
                     value = uiState.managementDecision,
-                    onValueChange = { /* Não editável, apenas exibição */ },
-                    readOnly = true, // Torna o campo somente leitura
+                    onValueChange = {  },
+                    readOnly = true,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp), // Ajuste a altura conforme o conteúdo esperado
+                        .height(120.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Resumo da avaliação, vindo do ViewModel
                 Text(
                     text = "Resumo da avaliação:",
                     style = MaterialTheme.typography.titleMedium,
@@ -178,17 +174,16 @@ fun EvaluationResultContent(
                 )
                 OutlinedTextField(
                     value = uiState.evaluationSummary,
-                    onValueChange = { /* Não editável, apenas exibição */ },
-                    readOnly = true, // Torna o campo somente leitura
+                    onValueChange = {  },
+                    readOnly = true,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp), // Ajuste a altura
+                        .height(150.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Outras informações importantes, vindo do ViewModel
                 Text(
                     text = "Outras informações importantes:",
                     style = MaterialTheme.typography.titleMedium,
@@ -198,17 +193,16 @@ fun EvaluationResultContent(
                 )
                 OutlinedTextField(
                     value = uiState.otherInfoText,
-                    onValueChange = { /* Não editável, apenas exibição */ },
-                    readOnly = true, // Torna o campo somente leitura
+                    onValueChange = {  },
+                    readOnly = true,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = LightColorScheme.onBackground),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp), // Ajuste a altura
+                        .height(180.dp),
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botões FINALIZAR e PRÓXIMA AMOSTRA
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,

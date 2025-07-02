@@ -4,18 +4,14 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import EvaluationData
-import org.example.project.utils.decodeUrl
 
-// 1. Adicione a propriedade 'evaluationData' à classe de estado da UI
 data class EvaluationResultUiState(
     val sampleScore: String = "",
     val managementDecision: String = "",
     val evaluationSummary: String = "",
     val otherInfoText: String = "",
-    val evaluationData: EvaluationData? = null // Adicione esta propriedade
+    val evaluationData: EvaluationData? = null
 )
 
 class EvaluationResultViewModel : ViewModel() {
@@ -24,7 +20,6 @@ class EvaluationResultViewModel : ViewModel() {
     val uiState: StateFlow<EvaluationResultUiState> = _uiState.asStateFlow()
 
     fun loadEvaluationResult(score: Float, evaluationData: EvaluationData?) {
-        // ... (o corpo da função permanece o mesmo que implementamos)
         if (evaluationData != null) {
             val managementDecisionText = when {
                 score >= 1.0f && score <= 2.9f -> {
@@ -43,13 +38,12 @@ class EvaluationResultViewModel : ViewModel() {
                 "Comprimento camada ${evaluationData.layers.indexOf(layer) + 1}: ${layer.length} cm; nota ${evaluationData.layers.indexOf(layer) + 1}: ${layer.score}"
             }
 
-            // 2. Atualize o estado da UI com o objeto EvaluationData completo
             _uiState.value = _uiState.value.copy(
                 sampleScore = score.toString(),
                 managementDecision = managementDecisionText,
                 evaluationSummary = layersSummary,
                 otherInfoText = evaluationData.otherImportantInfo,
-                evaluationData = evaluationData // Agora a propriedade existe e é populada
+                evaluationData = evaluationData
             )
         } else {
             _uiState.value = _uiState.value.copy(
